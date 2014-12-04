@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Сборщик статистики о работающих приложениях</string>
+    <string name="crash_report">Отчет о проблеме</string>
+
+    <string name="box">Сохранить выбор</string>
+</resources>
