@@ -23,10 +23,9 @@
                 android:id="@+id/appName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:textSize="16sp" android:gravity="top|left|fill_vertical"
                 android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
-                >
+                android:textAlignment="gravity" android:textStyle="italic">
             </TextView>
             <ImageView
                 android:id="@+id/appIcon"

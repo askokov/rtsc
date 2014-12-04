@@ -1,10 +1,10 @@
-package com.askokov.boot;
+package com.askokov.rtsc.boot;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
-import com.askokov.log.LogConfigurator;
+import com.askokov.rtsc.log.LogConfigurator;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 

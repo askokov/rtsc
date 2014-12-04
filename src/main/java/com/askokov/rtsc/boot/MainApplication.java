@@ -1,4 +1,4 @@
-package com.askokov.boot;
+package com.askokov.rtsc.boot;
 
 import android.app.Application;
 import org.acra.ACRA;

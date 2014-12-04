@@ -1,4 +1,4 @@
-package com.askokov.mail;
+package com.askokov.rtsc.mail;
 
 import java.security.Security;
 import java.util.Properties;

@@ -1,4 +1,4 @@
-package com.askokov.mail;
+package com.askokov.rtsc.mail;
 
 import java.security.AccessController;
 import java.security.Provider;

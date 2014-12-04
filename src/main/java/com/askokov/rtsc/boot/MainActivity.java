@@ -1,4 +1,4 @@
-package com.askokov.boot;
+package com.askokov.rtsc.boot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +13,11 @@ import android.os.ResultReceiver;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import com.askokov.common.PInfo;
-import com.askokov.log.LogConfigurator;
-import com.askokov.parcel.Constant;
-import com.askokov.parcel.ListParcel;
-import com.askokov.parcel.PInfoParcel;
+import com.askokov.rtsc.common.PInfo;
+import com.askokov.rtsc.log.LogConfigurator;
+import com.askokov.rtsc.parcel.Constant;
+import com.askokov.rtsc.parcel.ListParcel;
+import com.askokov.rtsc.parcel.PInfoParcel;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 

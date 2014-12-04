@@ -1,4 +1,4 @@
-package com.askokov.common;
+package com.askokov.rtsc.common;
 
 import java.io.Serializable;
 

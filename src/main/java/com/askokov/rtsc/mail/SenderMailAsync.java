@@ -1,4 +1,4 @@
-package com.askokov.mail;
+package com.askokov.rtsc.mail;
 
 import android.content.Context;
 import android.os.AsyncTask;

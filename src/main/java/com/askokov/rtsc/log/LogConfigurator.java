@@ -1,4 +1,4 @@
-package com.askokov.log;
+package com.askokov.rtsc.log;
 
 import android.content.Context;
 import com.google.code.microlog4android.Level;
@@ -23,9 +23,9 @@ public class LogConfigurator {
         formatter.setPattern("[%d{dd-MM-yyyy HH:mm:ss}]:[%P] [%c] - %m %T");
 
         FileAppender fileAppender = new FileAppender();
-        fileAppender.setFileName("askokov_log.txt");
+        fileAppender.setFileName("rtsc_log.txt");
         fileAppender.setFormatter(formatter);
-        //appender.setAppend(true);
+        fileAppender.setAppend(true);
         LoggerFactory.getLogger().addAppender(fileAppender);
 
         LogCatAppender logCatAppender = new LogCatAppender();

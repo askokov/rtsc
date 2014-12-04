@@ -1,10 +1,10 @@
-package com.askokov.monitor;
+package com.askokov.rtsc.monitor;
 
 import java.util.List;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import com.askokov.common.PInfo;
+import com.askokov.rtsc.common.PInfo;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package com.askokov.boot;
+package com.askokov.rtsc.boot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.askokov.common.PInfo;
+import com.askokov.rtsc.common.PInfo;
 
 public class BoxAdapter extends BaseAdapter {
     Context ctx;

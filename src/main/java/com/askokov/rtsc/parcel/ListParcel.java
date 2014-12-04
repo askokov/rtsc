@@ -1,4 +1,4 @@
-package com.askokov.parcel;
+package com.askokov.rtsc.parcel;
 
 import java.io.Serializable;
 import java.util.ArrayList;

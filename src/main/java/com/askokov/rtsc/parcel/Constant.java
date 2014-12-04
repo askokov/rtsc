@@ -1,4 +1,4 @@
-package com.askokov.parcel;
+package com.askokov.rtsc.parcel;
 
 import android.app.PendingIntent;
 

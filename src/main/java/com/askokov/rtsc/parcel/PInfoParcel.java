@@ -1,10 +1,10 @@
-package com.askokov.parcel;
+package com.askokov.rtsc.parcel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.askokov.common.PInfo;
+import com.askokov.rtsc.common.PInfo;
 
 public class PInfoParcel implements Serializable {
     private List<PInfo> list = new ArrayList<PInfo>();

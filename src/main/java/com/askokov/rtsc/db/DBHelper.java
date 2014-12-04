@@ -1,4 +1,4 @@
-package com.askokov.db;
+package com.askokov.rtsc.db;
 
 import android.content.ContentValues;
 import android.content.Context;

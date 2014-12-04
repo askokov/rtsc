@@ -1,4 +1,4 @@
-package com.askokov.boot;
+package com.askokov.rtsc.boot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +13,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.ResultReceiver;
-import com.askokov.common.Func;
-import com.askokov.common.PInfo;
-import com.askokov.monitor.ProcessesMonitor;
-import com.askokov.parcel.Constant;
-import com.askokov.parcel.ListParcel;
-import com.askokov.parcel.PInfoParcel;
+import com.askokov.rtsc.common.Func;
+import com.askokov.rtsc.common.PInfo;
+import com.askokov.rtsc.monitor.ProcessesMonitor;
+import com.askokov.rtsc.parcel.Constant;
+import com.askokov.rtsc.parcel.ListParcel;
+import com.askokov.rtsc.parcel.PInfoParcel;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
