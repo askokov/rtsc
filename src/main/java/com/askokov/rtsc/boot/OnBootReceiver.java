@@ -13,9 +13,7 @@ public class OnBootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        LogConfigurator.configure(context);
-        logger.info("onReceive --> configure log");
-
+        //LogConfigurator.configure(context);
         logger.info("OnBootReceiver.onReceive(" + (intent != null ? intent.getAction() : "null") + ")");
 
         // Start Service On Boot Start Up

@@ -5,18 +5,51 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-    <ListView
-        android:id="@+id/lvMain"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-    </ListView>
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:text="@string/box">
-    </Button>
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:shrinkColumns="0,2" android:stretchColumns="1"
+        >
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgSetup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/Symbol_Configuration_Enabled">
+            </ImageView>
+            <TextView
+                android:id="@+id/txtSetup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
+                android:textAlignment="gravity" android:textStyle="italic" android:text="@string/txtSetup"
+                android:layout_gravity="left|center_vertical">
+            </TextView>
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/cbAddInstalled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:clickable="true" android:enabled="true"
+                android:gravity="center_vertical">
+            </CheckBox>
+            <TextView
+                android:id="@+id/txtAddInstalled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" android:gravity="top|left|fill_vertical"
+                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
+                android:textAlignment="gravity" android:textStyle="italic" android:text="@string/txtAddInstalled"
+                android:layout_gravity="left|center_vertical">
+            </TextView>
+        </TableRow>
+    </TableLayout>
 </LinearLayout>

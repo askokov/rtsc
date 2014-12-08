@@ -64,15 +64,20 @@ public class StatService extends Service implements Constant {
         logger.info("StatService: register receivers");
 
         if (intent != null) {
-            logger.info("StatService: result receiver send");
             ResultReceiver resultReceiver = (ResultReceiver)intent.getParcelableExtra(RECEIVER);
 
-            infos.clear();
-            infos.addAll(Func.getInstalledApps(this));
+            if (resultReceiver != null) {
+                infos.clear();
+                infos.addAll(Func.getInstalledApps(this));
 
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(RESULT, new PInfoParcel(infos));
-            resultReceiver.send(STATUS_FINISH, bundle);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(RESULT, new PInfoParcel(infos));
+                resultReceiver.send(STATUS_FINISH, bundle);
+
+                logger.info("StatService: result receiver send");
+            } else {
+                logger.info("StatService: missing result receiver");
+            }
         }
 
         return START_STICKY;

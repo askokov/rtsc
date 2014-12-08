@@ -13,11 +13,11 @@
         <platform.version>17</platform.version>
         <android.plugin.version>3.8.2</android.plugin.version>
 
-        <project.version.name.number>1.0.0</project.version.name.number>
+        <project.version.name.number>0.1</project.version.name.number>
         <project.version.code>1</project.version.code>
 
         <project.emulator.name>Google_APIs</project.emulator.name>
-        <project.version.name>${project.version.name.number}-${project.version.code}</project.version.name>
+        <project.version.name>${project.version.name.number}</project.version.name>
         <project.verbosity>true</project.verbosity>
         <project.debug.mode>false</project.debug.mode>
     </properties>
@@ -92,25 +92,46 @@
             </plugin>
 
             <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.6.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <followSymlinks>false</followSymlinks>
+                            <directory>${basedir}</directory>
+                            <includes>
+                                <include>gen/r/**</include>
+                                <include>gen/aidl/**</include>
+                                <include>target</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
+                    <genDirectory>${project.basedir}/gen/r</genDirectory>
+                    <genDirectoryAidl>${project.basedir}/gen/aidl</genDirectoryAidl>
+                    <!--assetsDirectory>${project.basedir}/assets</assetsDirectory-->
+
                     <sdk>
                         <platform>${platform.version}</platform>
                     </sdk>
-                    <manifest>
+                    <!--manifest>
                         <versionName>${project.version.name}</versionName>
                         <versionCode>${project.version.code}</versionCode>
                         <debuggable>${project.debug.mode}</debuggable>
-                        <debuggable>false</debuggable>
-                    </manifest>
+                    </manifest-->
 
                     <dex>
                         <coreLibrary>true</coreLibrary>
                     </dex>
                     <sign>
-                        <debug>false</debug>
+                        <debug>${project.debug.mode}</debug>
                     </sign>
                     <zipalign>
                         <skip>true</skip> <!-- build-tools: since 19.1.1 -->

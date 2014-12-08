@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.askokov.rtsc.R;
 import com.askokov.rtsc.common.PInfo;
 
 public class BoxAdapter extends BaseAdapter {

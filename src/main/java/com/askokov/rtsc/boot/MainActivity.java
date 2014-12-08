@@ -13,6 +13,7 @@ import android.os.ResultReceiver;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import com.askokov.rtsc.R;
 import com.askokov.rtsc.common.PInfo;
 import com.askokov.rtsc.log.LogConfigurator;
 import com.askokov.rtsc.parcel.Constant;
@@ -33,13 +34,12 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //LogConfigurator.configure(this);
+        logger.info("MainActivity.onCreate");
 
         setContentView(R.layout.main);
         Button btnChecked = (Button) findViewById(R.id.btnSave);
         btnChecked.setOnClickListener(this);
-
-        LogConfigurator.configure(this);
-        logger.info("MainActivity.onCreate");
 
         if (isServiceRunning()) {
             logger.info("MainActivity.onCreate: service running");

@@ -1,6 +1,8 @@
 package com.askokov.rtsc.boot;
 
 import android.app.Application;
+import com.askokov.rtsc.R;
+import com.askokov.rtsc.log.LogConfigurator;
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
@@ -15,6 +17,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         ACRA.init(this);
-        super.onCreate();
+        LogConfigurator.configure(this);
+        //super.onCreate();
     }
 }

@@ -20,7 +20,7 @@ public class LogConfigurator {
         PropertyConfigurator.getConfigurator(context).configure();
 
         PatternFormatter formatter = new PatternFormatter();
-        formatter.setPattern("[%d{dd-MM-yyyy HH:mm:ss}]:[%P] [%c] - %m %T");
+        formatter.setPattern("[%d{DATE}]:[%P] [%c] - %m %T");
 
         FileAppender fileAppender = new FileAppender();
         fileAppender.setFileName("rtsc_log.txt");
@@ -28,10 +28,11 @@ public class LogConfigurator {
         fileAppender.setAppend(true);
         LoggerFactory.getLogger().addAppender(fileAppender);
 
+        /*
         LogCatAppender logCatAppender = new LogCatAppender();
         logCatAppender.setFormatter(formatter);
         LoggerFactory.getLogger().addAppender(logCatAppender);
-
+        */
         LoggerFactory.getLogger().setLevel(Level.INFO);
     }
 }

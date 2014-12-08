@@ -4,4 +4,6 @@
     <string name="crash_report">Отчет о проблеме</string>
 
     <string name="box">Сохранить выбор</string>
+    <string name="txtSetup">Настроить приложения</string>
+    <string name="txtAddInstalled">Добавлять установленные</string>
 </resources>

@@ -4,4 +4,6 @@
     <string name="crash_report">Crash report</string>
 
     <string name="box">Save choice</string>
+    <string name="txtSetup">Setup applications</string>
+    <string name="txtAddInstalled">Add installed</string>
 </resources>
