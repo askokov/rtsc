@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Running task statistic collector</string>
+    <string name="main_name">Setup collector</string>
+    <string name="apps_name">Edit task list</string>
     <string name="crash_report">Crash report</string>
 
-    <string name="box">Save choice</string>
     <string name="txtSetup">Setup applications</string>
     <string name="txtAddInstalled">Add installed</string>
 </resources>

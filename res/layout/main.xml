@@ -14,13 +14,13 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/imgSetup"
+            <Button
+                android:id="@+id/btnSetup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/Symbol_Configuration_Enabled">
-            </ImageView>
+                android:background="@drawable/configuration_enabled">
+            </Button>
             <TextView
                 android:id="@+id/txtSetup"
                 android:layout_width="wrap_content"
@@ -30,6 +30,14 @@
                 android:textAlignment="gravity" android:textStyle="italic" android:text="@string/txtSetup"
                 android:layout_gravity="left|center_vertical">
             </TextView>
+
+            <Button
+                android:id="@+id/btnHelp1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/question_enabled">
+            </Button>
         </TableRow>
         <TableRow
             android:layout_width="fill_parent"
@@ -50,6 +58,13 @@
                 android:textAlignment="gravity" android:textStyle="italic" android:text="@string/txtAddInstalled"
                 android:layout_gravity="left|center_vertical">
             </TextView>
+            <Button
+                android:id="@+id/btnHelp2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/question_enabled">
+            </Button>
         </TableRow>
     </TableLayout>
 </LinearLayout>

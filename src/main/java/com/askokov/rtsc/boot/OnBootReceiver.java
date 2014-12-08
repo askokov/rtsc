@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
-import com.askokov.rtsc.log.LogConfigurator;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
@@ -13,7 +12,6 @@ public class OnBootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //LogConfigurator.configure(context);
         logger.info("OnBootReceiver.onReceive(" + (intent != null ? intent.getAction() : "null") + ")");
 
         // Start Service On Boot Start Up

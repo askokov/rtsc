@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Сборщик статистики о работающих приложениях</string>
+    <string name="main_name">Настройка сборщика</string>
+    <string name="apps_name">Редактирование списка приложений</string>
     <string name="crash_report">Отчет о проблеме</string>
 
-    <string name="box">Сохранить выбор</string>
     <string name="txtSetup">Настроить приложения</string>
     <string name="txtAddInstalled">Добавлять установленные</string>
 </resources>

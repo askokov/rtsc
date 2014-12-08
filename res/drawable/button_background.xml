@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/Save_All_Enabled"/>
-    <item android:drawable="@drawable/Save_All_Disabled" android:state_pressed="true"/>
+    <item android:drawable="@drawable/save_enabled"/>
+    <item android:drawable="@drawable/save_disabled" android:state_pressed="true"/>
 
-    <item android:drawable="@drawable/Symbol_Configuration_Enabled"/>
-    <item android:drawable="@drawable/Symbol_Configuration_Disabled" android:state_pressed="true"/>
+    <item android:drawable="@drawable/configuration_enabled"/>
+    <item android:drawable="@drawable/configuration_disabled" android:state_pressed="true"/>
+
+    <item android:drawable="@drawable/question_enabled"/>
+    <item android:drawable="@drawable/question_disabled" android:state_pressed="true"/>
 </selector>

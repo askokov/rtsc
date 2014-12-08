@@ -15,11 +15,14 @@
 
     <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="com.askokov.rtsc.boot.MainApplication" android:theme="@style/AppTheme">
 
-        <activity android:label="@string/app_name" android:name=".boot.MainActivity">
+        <activity android:label="@string/main_name" android:name=".boot.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+
+        <activity android:label="@string/apps_name" android:name=".boot.AppsActivity">
         </activity>
 
         <receiver android:enabled="true" android:label="OnBootReceiver" android:name=".boot.OnBootReceiver">
