@@ -11,27 +11,31 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int button_background=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int save_disabled=0x7f020002;
-        public static final int save_enabled=0x7f020003;
-        public static final int symbol_configuration_disabled=0x7f020004;
-        public static final int symbol_configuration_enabled=0x7f020005;
-        public static final int symbol_question_disabled=0x7f020006;
-        public static final int symbol_question_enabled=0x7f020007;
+        public static final int border=0x7f020000;
+        public static final int button_background=0x7f020001;
+        public static final int configuration_disabled=0x7f020002;
+        public static final int configuration_enabled=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
+        public static final int question_disabled=0x7f020005;
+        public static final int question_enabled=0x7f020006;
+        public static final int save_disabled=0x7f020007;
+        public static final int save_enabled=0x7f020008;
     }
     public static final class id {
         public static final int appIcon=0x7f060004;
         public static final int appName=0x7f060003;
-        public static final int btnHelp1=0x7f060007;
-        public static final int btnHelp2=0x7f06000a;
+        public static final int btnHelp1=0x7f060008;
+        public static final int btnHelp2=0x7f06000b;
         public static final int btnSave=0x7f060001;
-        public static final int btnSetup=0x7f060005;
-        public static final int cbAddInstalled=0x7f060008;
+        public static final int btnSetup=0x7f060006;
+        public static final int cbAddInstalled=0x7f060009;
         public static final int cbBox=0x7f060002;
         public static final int lvMain=0x7f060000;
-        public static final int txtAddInstalled=0x7f060009;
-        public static final int txtSetup=0x7f060006;
+        public static final int tblMain=0x7f060005;
+        public static final int txtAddInstalled=0x7f06000a;
+        public static final int txtEmpty=0x7f06000c;
+        public static final int txtInfo=0x7f06000d;
+        public static final int txtSetup=0x7f060007;
     }
     public static final class layout {
         public static final int apps=0x7f030000;

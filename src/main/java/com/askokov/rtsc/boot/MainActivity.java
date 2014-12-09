@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import com.askokov.rtsc.R;
+import com.askokov.rtsc.log.LogConfigurator;
 import com.askokov.rtsc.parcel.Constant;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
@@ -15,10 +18,16 @@ import com.google.code.microlog4android.LoggerFactory;
 public class MainActivity extends Activity implements Constant, View.OnClickListener {
 
     private static final Logger logger = LoggerFactory.getLogger(MainActivity.class);
+    private static final String SAVED_CHECK_BOX = "savedCheckBox";
+    private static final String LABEL = "saveLabel";
+
+    private CheckBox chb;
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogConfigurator.configure(this);
 
         logger.info("MainActivity.onCreate");
 
@@ -27,11 +36,20 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         Button btnSetup = (Button) findViewById(R.id.btnSetup);
         btnSetup.setOnClickListener(this);
 
+        chb = (CheckBox) findViewById(R.id.cbAddInstalled);
+        if (!loadPreferences()) {
+            chb.setChecked(false);
+        }
+
         Button btnHelp1 = (Button) findViewById(R.id.btnHelp1);
         btnHelp1.setOnClickListener(this);
 
         Button btnHelp2 = (Button) findViewById(R.id.btnHelp2);
         btnHelp2.setOnClickListener(this);
+
+        //Start observing
+
+        //Print report
 
         if (isServiceRunning()) {
             logger.info("MainActivity.onCreate: service running");
@@ -39,6 +57,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
             logger.info("MainActivity.onCreate: service missing");
 
             Intent intent = new Intent(this, StatService.class);
+            intent.putExtra(OBSERVE_INSTALLED, chb.isChecked());
             startService(intent);
         }
     }
@@ -52,13 +71,38 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
     @Override
     public void onClick(final View v) {
-        Intent intent = new Intent(this, AppsActivity.class);
-        startActivityForResult(intent, 1);
+        switch (v.getId()) {
+            case R.id.btnSetup:
+                Intent intent = new Intent(this, AppsActivity.class);
+                intent.putExtra(OBSERVE_INSTALLED, chb.isChecked());
+                startActivityForResult(intent, REQUEST_GET_APP_LIST);
+
+                break;
+            case R.id.btnHelp1:
+                break;
+            case R.id.btnHelp2:
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // запишем в лог значения requestCode и resultCode
+        logger.info("MainActivity.onActivityResult: requestCode = " + requestCode + ", resultCode = " + resultCode);
+        // если пришло ОК
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_GET_APP_LIST:
+                    //int align = data.getIntExtra("alignment", Gravity.LEFT);
+                    break;
+            }
+        }
     }
 
     @Override
     protected void onDestroy() {
         logger.info("MainActivity.onDestroy");
+        savePreferences();
 
         super.onDestroy();
     }
@@ -71,5 +115,28 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
             }
         }
         return false;
+    }
+
+    private boolean savePreferences() {
+        logger.info("MainActivity.savePreferences: saved");
+
+        pref = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putBoolean(SAVED_CHECK_BOX, chb.isChecked());
+        ed.putString(LABEL, LABEL);
+        return ed.commit();
+    }
+
+    private boolean loadPreferences() {
+        pref = getPreferences(MODE_PRIVATE);
+        String label = pref.getString(LABEL, null);
+
+        if (label != null) {
+            boolean ch = pref.getBoolean(SAVED_CHECK_BOX, false);
+            chb.setChecked(ch);
+            logger.info("MainActivity.loadPreferences: loaded<" + ch + ">");
+        }
+
+        return label != null;
     }
 }

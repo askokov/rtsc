@@ -78,7 +78,7 @@ public class BoxAdapter extends BaseAdapter {
     }
 
     // товар по позиции
-    private PInfo getInstalledApp(int position) {
+    public PInfo getInstalledApp(int position) {
         return ((PInfo) getItem(position));
     }
 
@@ -95,7 +95,7 @@ public class BoxAdapter extends BaseAdapter {
     }
 
     // обработчик для чекбоксов
-    OnCheckedChangeListener myCheckChangList = new OnCheckedChangeListener() {
+    private OnCheckedChangeListener myCheckChangList = new OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             // меняем данные (выбран или нет)
             getInstalledApp((Integer) buttonView.getTag()).setChecked(isChecked);

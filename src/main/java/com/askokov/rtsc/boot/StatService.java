@@ -1,6 +1,8 @@
 package com.askokov.rtsc.boot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.AlarmManager;
@@ -25,7 +27,7 @@ import com.google.code.microlog4android.LoggerFactory;
 public class StatService extends Service implements Constant {
     private static final Logger logger = LoggerFactory.getLogger(StatService.class);
     // restart service every 120 seconds
-    private static final long REPEAT_TIME = 1000 * 60;
+    private static final long REPEAT_TIME = 1000 * 120;
 
     private List<PInfo> infos = new ArrayList<PInfo>();
     private final Object sync = new Object();
@@ -63,12 +65,14 @@ public class StatService extends Service implements Constant {
 
         logger.info("StatService: register receivers");
 
+        //Load applications list from DB
+
         if (intent != null) {
-            ResultReceiver resultReceiver = (ResultReceiver)intent.getParcelableExtra(RECEIVER);
+            ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
 
             if (resultReceiver != null) {
-                infos.clear();
-                infos.addAll(Func.getInstalledApps(this));
+                boolean observeInstalled = intent.getBooleanExtra(OBSERVE_INSTALLED, false);
+                mergeInfo(infos, retrieveInstalledApplications(), observeInstalled);
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(RESULT, new PInfoParcel(infos));
@@ -122,19 +126,75 @@ public class StatService extends Service implements Constant {
     }
 
     private void updateAppList(List<String> toUpdate) {
+        clearAppList();
+
+        for(String p : toUpdate) {
+            PInfo info = findInfoByPackage(infos, p);
+
+            if (info != null) {
+                info.setChecked(true);
+                logger.info("SetupReceiver.updateAppList: checked<" + p + ">");
+            }
+        }
+    }
+
+    private void clearAppList() {
         for(PInfo info : infos) {
             info.setChecked(false);
         }
+    }
 
-        for(String p : toUpdate) {
-            for(PInfo info : infos) {
-                if (p.equals(info.getPname())) {
-                    info.setChecked(true);
-                    logger.info("SetupReceiver.updateAppList: checked<" + p + ">");
-                    break;
+    private PInfo findInfoByPackage(List<PInfo> inMemory, String pName) {
+        PInfo result = null;
+        for(PInfo info : inMemory) {
+            if (pName.equals(info.getPname())) {
+                result = info;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private List<PInfo> retrieveInstalledApplications() {
+        List<PInfo> apps = Func.getInstalledApps(this);
+        Collections.sort(apps, new PInfoComparator());
+
+        return apps;
+    }
+
+    private void mergeInfo(List<PInfo> inMemory, List<PInfo> inDevice, boolean observeInstalled) {
+        List<PInfo> result = new ArrayList<PInfo>();
+        boolean empty = inMemory.isEmpty();
+
+        if (!empty) {
+            for (PInfo mem : inMemory) {
+                PInfo dev = findInfoByPackage(inDevice, mem.getPname());
+
+                if (dev == null) {
+                    logger.info("StatService.mergeInfo: application was deleted - " + mem.getPname());
+                    //close statistic for it
                 }
             }
         }
+
+        for(PInfo dev : inDevice) {
+            PInfo mem = findInfoByPackage(inMemory, dev.getPname());
+
+            if (mem == null) {
+                logger.info("StatService.mergeInfo: found new application - " + dev.getPname());
+
+                if (observeInstalled && !empty) {
+                    dev.setChecked(true);
+                }
+            } else {
+                dev.setChecked(mem.isChecked());
+            }
+            result.add(dev);
+        }
+
+        inMemory.clear();
+        inMemory.addAll(result);
     }
 
     class AlarmReceiver extends BroadcastReceiver {
@@ -163,10 +223,10 @@ public class StatService extends Service implements Constant {
             if (requestCode == REQUEST_GET_APP_LIST) {
                 logger.info("SetupReceiver.onReceive: execute<get app list>");
 
-                ResultReceiver resultReceiver = (ResultReceiver) intent.getParcelableExtra(RECEIVER);
+                ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
+                boolean observeInstalled = intent.getBooleanExtra(OBSERVE_INSTALLED, false);
 
-                infos.clear();
-                infos.addAll(Func.getInstalledApps(context));
+                mergeInfo(infos, retrieveInstalledApplications(), observeInstalled);
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(RESULT, new PInfoParcel(infos));
@@ -175,7 +235,7 @@ public class StatService extends Service implements Constant {
             } else if (requestCode == REQUEST_UPDATE_APP_LIST) {
                 logger.info("SetupReceiver.onReceive: execute<update app list>");
 
-                ResultReceiver resultReceiver = (ResultReceiver) intent.getParcelableExtra(RECEIVER);
+                ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
                 ListParcel parcel = (ListParcel) intent.getSerializableExtra(PARCEL);
 
                 updateAppList(parcel.getList());
@@ -183,7 +243,24 @@ public class StatService extends Service implements Constant {
                 Bundle bundle = new Bundle();
                 bundle.putString(RESULT, "Update success");
                 resultReceiver.send(STATUS_FINISH, bundle);
+            } else if (requestCode == REQUEST_CLEAR_APP_LIST) {
+                logger.info("SetupReceiver.onReceive: execute<clear app list>");
+
+                ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
+
+                clearAppList();
+
+                Bundle bundle = new Bundle();
+                bundle.putString(RESULT, "Update success");
+                resultReceiver.send(STATUS_FINISH, bundle);
             }
+        }
+    }
+
+    class PInfoComparator implements Comparator<PInfo> {
+        @Override
+        public int compare(final PInfo lhs, final PInfo rhs) {
+            return lhs.getPname().compareTo(rhs.getPname());
         }
     }
 }

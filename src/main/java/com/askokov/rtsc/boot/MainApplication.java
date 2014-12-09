@@ -17,7 +17,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         ACRA.init(this);
-        LogConfigurator.configure(this);
+        //LogConfigurator.configure(this);
         //super.onCreate();
     }
 }
