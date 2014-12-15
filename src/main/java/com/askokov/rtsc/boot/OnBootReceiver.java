@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
+import com.askokov.rtsc.common.Func;
 import com.askokov.rtsc.log.LogConfigurator;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
@@ -14,12 +15,12 @@ public class OnBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         LogConfigurator.configure(context);
-        logger.info("OnBootReceiver.onReceive(" + (intent != null ? intent.getAction() : "null") + ")");
+        Func.printIntent("OnBootReceiver.onReceive", intent);
 
-        // Start Service On Boot Start Up
+        //Start Service On Boot Start Up
         Intent service = new Intent(context, StatService.class);
         context.startService(service);
-        logger.info("OnBootReceiver.onReceive --> start log service");
+        logger.info("OnBootReceiver.onReceive --> start service");
     }
 
     /* Checks if external storage is available for read and write */

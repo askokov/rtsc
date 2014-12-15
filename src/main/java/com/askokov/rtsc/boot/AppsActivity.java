@@ -10,11 +10,10 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import com.askokov.rtsc.R;
+import com.askokov.rtsc.common.Constant;
 import com.askokov.rtsc.common.PInfo;
-import com.askokov.rtsc.parcel.Constant;
 import com.askokov.rtsc.parcel.ListParcel;
 import com.askokov.rtsc.parcel.PInfoParcel;
 import com.google.code.microlog4android.Logger;
@@ -62,11 +61,13 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.btnClear:
+                logger.info("AppsActivity.onClick: CLEAR");
                 performClear();
 
                 break;
 
             case R.id.btnSave:
+                logger.info("AppsActivity.onClick: SAVE");
                 performSave();
 
                 Intent intent = new Intent();
@@ -115,12 +116,8 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
     }
 
     private void performClear() {
-        int count = lvMain.getCount();
-        for(int i = 0; i < count; i++) {
-            View view = (View)lvMain.getTag(i);
-            CheckBox cb = (CheckBox) view.findViewById(R.id.cbBox);
-            cb.setChecked(false);
-        }
+        boxAdapter.clearBox();
+        boxAdapter.notifyDataSetChanged();
 
         sendClearAppListRequest();
     }

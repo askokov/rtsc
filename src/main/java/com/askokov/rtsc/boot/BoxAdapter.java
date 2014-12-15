@@ -94,6 +94,12 @@ public class BoxAdapter extends BaseAdapter {
         return box;
     }
 
+    public void clearBox() {
+        for (PInfo app : objects) {
+            app.setChecked(false);
+        }
+    }
+
     // обработчик для чекбоксов
     private OnCheckedChangeListener myCheckChangList = new OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

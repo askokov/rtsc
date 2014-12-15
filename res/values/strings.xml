@@ -5,6 +5,11 @@
     <string name="apps_name">Edit task list</string>
     <string name="crash_report">Crash report</string>
 
-    <string name="txtSetup">Setup applications</string>
+    <string name="txtAppListSetup">Configure applications list</string>
+    <string name="txtEmailSetup">Configure e-mail</string>
+    <string name="txtReportSetup">Configure report</string>
+    <string name="txtGenerateReport">Generate report</string>
+    <string name="txtServiceStart">Start service</string>
+    <string name="txtServiceStop">Stop service</string>
     <string name="txtAddInstalled">Add installed</string>
 </resources>

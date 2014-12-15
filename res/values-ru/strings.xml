@@ -5,6 +5,11 @@
     <string name="apps_name">Редактирование списка приложений</string>
     <string name="crash_report">Отчет о проблеме</string>
 
-    <string name="txtSetup">Настроить приложения</string>
+    <string name="txtAppListSetup">Настройка списка приложений</string>
+    <string name="txtEmailSetup">Настройка почты</string>
+    <string name="txtReportSetup">Настройка отчетов</string>
+    <string name="txtGenerateReport">Создать отчет</string>
+    <string name="txtServiceStart">Запуск сервиса</string>
+    <string name="txtServiceStop">Остановка сервиса</string>
     <string name="txtAddInstalled">Добавлять установленные</string>
 </resources>

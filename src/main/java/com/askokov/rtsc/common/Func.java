@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 import com.google.code.microlog4android.Logger;
@@ -21,6 +23,27 @@ public class Func {
 
     public static List<PInfo> getInstalledApps(Context context) {
         return getInstalledApps(context, false); /* false = no system packages */
+    }
+
+    public static void printIntent(String where, Intent intent) {
+        logger.info(where + ": Action<" + (intent != null ? intent.getAction() : "null") + ">");
+        if (intent != null) {
+            logger.info(where + ": intent=" + intent);
+
+            boolean extraReplacing = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
+            logger.info(where + ": EXTRA_REPLACING=" + extraReplacing);
+
+            boolean extraRemoved = intent.getBooleanExtra(Intent.EXTRA_DATA_REMOVED, false);
+            logger.info(where + ": EXTRA_DATA_REMOVED=" + extraRemoved);
+
+            Uri data = intent.getData();
+            logger.info(where + ": data=" + data);
+
+            if (data != null) {
+                String pkgName = data.getEncodedSchemeSpecificPart();
+                logger.info(where + "Func: pkgName=" + pkgName);
+            }
+        }
     }
 
     public static Map<String, String> getContactByPhone(Context context, String sourcePhoneNumber) {

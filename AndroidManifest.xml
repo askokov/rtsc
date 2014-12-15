@@ -26,6 +26,7 @@
 
         <activity android:label="@string/apps_name" android:name=".boot.AppsActivity">
             <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
@@ -37,6 +38,33 @@
         </receiver>
 
         <service android:enabled="true" android:name=".boot.StatService"/>
+
+        <receiver android:name=".boot.PackageReceiver" android:enabled="true">
+            <intent-filter android:priority="999">
+                <!--action android:name="android.intent.action.CALL"></action-->
+
+                <!--
+    EXTRA_UID containing the integer uid assigned to the new package.
+    EXTRA_REPLACING is set to true if this is following an ACTION_PACKAGE_REMOVED broadcast for the same package.
+                -->
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_CHANGED"/>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.PACKAGE_FIRST_LAUNCH"/>
+
+                <!--
+    EXTRA_UID containing the integer uid previously assigned to the package.
+    EXTRA_DATA_REMOVED is set to true if the entire application - data and code - is being removed.
+    EXTRA_REPLACING is set to true if this will be followed by an ACTION_PACKAGE_ADDED broadcast for the same package.
+                -->
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED"/>
+                <action android:name="android.intent.action.REBOOT"/>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 </manifest>

@@ -16,19 +16,19 @@
             android:layout_height="wrap_content" android:background="@drawable/border">
 
             <Button
-                android:id="@+id/btnSetup"
+                android:id="@+id/btnAppListSetup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/configuration_enabled">
             </Button>
             <TextView
-                android:id="@+id/txtSetup"
+                android:id="@+id/txtAppListSetup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
-                android:textAlignment="gravity" android:textStyle="italic" android:text="@string/txtSetup"
+                android:textAlignment="gravity" android:textStyle="italic" android:text="@string/txtAppListSetup"
                 android:layout_gravity="left|center_vertical">
             </TextView>
 
@@ -40,6 +40,123 @@
                 android:background="@drawable/question_enabled">
             </Button>
         </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:background="@drawable/border">
+
+            <Button
+                android:id="@+id/btnEmailSetup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/email_enabled">
+            </Button>
+            <TextView
+                android:id="@+id/txtEmailSetup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
+                android:textAlignment="gravity" android:textStyle="italic" android:text="@string/txtEmailSetup"
+                android:layout_gravity="left|center_vertical">
+            </TextView>
+
+            <Button
+                android:id="@+id/btnHelp2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/question_enabled">
+            </Button>
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:background="@drawable/border">
+
+            <Button
+                android:id="@+id/btnReportSetup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/report_enabled">
+            </Button>
+            <TextView
+                android:id="@+id/txtReportSetup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
+                android:textAlignment="gravity" android:textStyle="italic" android:text="@string/txtReportSetup"
+                android:layout_gravity="left|center_vertical">
+            </TextView>
+
+            <Button
+                android:id="@+id/btnHelp3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/question_enabled">
+            </Button>
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:background="@drawable/border">
+
+            <Button
+                android:id="@+id/btnGenerateReport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/printer_enabled">
+            </Button>
+            <TextView
+                android:id="@+id/txtGenerateReport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
+                android:textAlignment="gravity" android:textStyle="italic" android:text="@string/txtGenerateReport"
+                android:layout_gravity="left|center_vertical">
+            </TextView>
+
+            <Button
+                android:id="@+id/btnHelp4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/question_enabled">
+            </Button>
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:background="@drawable/border">
+
+            <Button
+                android:id="@+id/btnService"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/server_run_enabled">
+            </Button>
+            <TextView
+                android:id="@+id/txtServiceStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
+                android:textAlignment="gravity" android:textStyle="italic" android:text="@string/txtServiceStart"
+                android:layout_gravity="left|center_vertical">
+            </TextView>
+
+            <Button
+                android:id="@+id/btnHelp5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/question_enabled">
+            </Button>
+        </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" android:background="@drawable/border">
@@ -60,41 +177,12 @@
                 android:layout_gravity="left|center_vertical">
             </TextView>
             <Button
-                android:id="@+id/btnHelp2"
+                android:id="@+id/btnHelp6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/question_enabled">
             </Button>
-        </TableRow>
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:background="@drawable/border" android:minHeight="100dp">
-
-            <TextView
-                android:id="@+id/txtEmpty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" android:gravity="top|left|fill_vertical"
-                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
-                android:textAlignment="gravity" android:textStyle="italic" android:text=""
-                android:layout_gravity="left|center_vertical" android:layout_span="3">
-            </TextView>
-
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:background="@drawable/border">
-
-            <TextView
-                android:id="@+id/txtInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" android:gravity="top|left|fill_vertical"
-                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
-                android:textAlignment="gravity" android:textStyle="italic"
-                android:layout_gravity="left|center_vertical" android:layout_span="3" android:text="status line">
-            </TextView>
         </TableRow>
     </TableLayout>
 </LinearLayout>

@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import com.askokov.rtsc.R;
 import com.askokov.rtsc.log.LogConfigurator;
-import com.askokov.rtsc.parcel.Constant;
+import com.askokov.rtsc.common.Constant;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
@@ -33,8 +33,20 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
         setContentView(R.layout.main);
 
-        Button btnSetup = (Button) findViewById(R.id.btnSetup);
-        btnSetup.setOnClickListener(this);
+        Button btnAppListSetup = (Button) findViewById(R.id.btnAppListSetup);
+        btnAppListSetup.setOnClickListener(this);
+
+        Button btnEmailSetup = (Button) findViewById(R.id.btnEmailSetup);
+        btnEmailSetup.setOnClickListener(this);
+
+        Button btnReportSetup = (Button) findViewById(R.id.btnReportSetup);
+        btnReportSetup.setOnClickListener(this);
+
+        Button btnGenerateReport = (Button) findViewById(R.id.btnGenerateReport);
+        btnGenerateReport.setOnClickListener(this);
+
+        Button btnService = (Button) findViewById(R.id.btnService);
+        btnService.setOnClickListener(this);
 
         chb = (CheckBox) findViewById(R.id.cbAddInstalled);
         if (!loadPreferences()) {
@@ -47,9 +59,11 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         Button btnHelp2 = (Button) findViewById(R.id.btnHelp2);
         btnHelp2.setOnClickListener(this);
 
-        //Start observing
+        Button btnHelp3 = (Button) findViewById(R.id.btnHelp3);
+        btnHelp3.setOnClickListener(this);
 
-        //Print report
+        //Start/Stop service button
+
 
         if (isServiceRunning()) {
             logger.info("MainActivity.onCreate: service running");
@@ -72,15 +86,26 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-            case R.id.btnSetup:
+            case R.id.btnAppListSetup:
                 Intent intent = new Intent(this, AppsActivity.class);
                 intent.putExtra(OBSERVE_INSTALLED, chb.isChecked());
                 startActivityForResult(intent, REQUEST_GET_APP_LIST);
 
                 break;
+            case R.id.btnEmailSetup:
+                break;
+            case R.id.btnReportSetup:
+                break;
+            case R.id.btnGenerateReport:
+                break;
+            case R.id.btnService:
+                break;
+
             case R.id.btnHelp1:
                 break;
             case R.id.btnHelp2:
+                break;
+            case R.id.btnHelp3:
                 break;
         }
     }
