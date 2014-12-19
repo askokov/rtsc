@@ -53,7 +53,7 @@ public final class R {
         public static final int txtEmailSetup=0x7f06000b;
         public static final int txtGenerateReport=0x7f060011;
         public static final int txtReportSetup=0x7f06000e;
-        public static final int txtServiceStart=0x7f060014;
+        public static final int txtService=0x7f060014;
     }
     public static final class layout {
         public static final int apps=0x7f030000;

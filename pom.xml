@@ -67,6 +67,17 @@
             <artifactId>acra</artifactId>
             <version>4.5.0</version>
         </dependency>
+
+        <!--dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>4.2.1</version>
+        </dependency-->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.5.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -134,7 +145,8 @@
                         <debug>${project.debug.mode}</debug>
                     </sign>
                     <zipalign>
-                        <skip>true</skip> <!-- build-tools: since 19.1.1 -->
+                        <skip>true</skip>
+                        <!-- build-tools: since 19.1.1 -->
                         <verbose>${project.verbosity}</verbose>
                         <inputApk>${project.build.directory}/${project.artifactId}-${project.version}.apk</inputApk>
                         <outputApk>

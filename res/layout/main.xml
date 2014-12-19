@@ -136,10 +136,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/server_run_enabled">
+                android:background="@drawable/server_stop_enabled">
             </Button>
             <TextView
-                android:id="@+id/txtServiceStart"
+                android:id="@+id/txtService"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"

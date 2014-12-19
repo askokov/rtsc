@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import com.askokov.rtsc.R;
-import com.askokov.rtsc.log.LogConfigurator;
 import com.askokov.rtsc.common.Constant;
+import com.askokov.rtsc.common.ReportGenerator;
+import com.askokov.rtsc.log.LogConfigurator;
+import com.askokov.rtsc.mail.SenderMailAsync;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
@@ -23,6 +26,9 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
     private CheckBox chb;
     private SharedPreferences pref;
+    Button btnService;
+    TextView txtService;
+    private boolean serviceRinning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +51,19 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         Button btnGenerateReport = (Button) findViewById(R.id.btnGenerateReport);
         btnGenerateReport.setOnClickListener(this);
 
-        Button btnService = (Button) findViewById(R.id.btnService);
+        btnService = (Button) findViewById(R.id.btnService);
         btnService.setOnClickListener(this);
+        serviceRinning = false;
+
+        if (isServiceRunning()) {
+            btnService.setBackgroundResource(R.drawable.server_stop_enabled);
+            serviceRinning = true;
+            txtService = (TextView) findViewById(R.id.txtService);
+            txtService.setText(R.string.txtServiceStop);
+            btnGenerateReport.setOnClickListener(this);
+
+            logger.info("MainActivity.onCreate: service running");
+        }
 
         chb = (CheckBox) findViewById(R.id.cbAddInstalled);
         if (!loadPreferences()) {
@@ -61,19 +78,6 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
         Button btnHelp3 = (Button) findViewById(R.id.btnHelp3);
         btnHelp3.setOnClickListener(this);
-
-        //Start/Stop service button
-
-
-        if (isServiceRunning()) {
-            logger.info("MainActivity.onCreate: service running");
-        } else {
-            logger.info("MainActivity.onCreate: service missing");
-
-            Intent intent = new Intent(this, StatService.class);
-            intent.putExtra(OBSERVE_INSTALLED, chb.isChecked());
-            startService(intent);
-        }
     }
 
     @Override
@@ -92,19 +96,56 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                 startActivityForResult(intent, REQUEST_GET_APP_LIST);
 
                 break;
+
             case R.id.btnEmailSetup:
                 break;
+
             case R.id.btnReportSetup:
                 break;
+
             case R.id.btnGenerateReport:
+                try {
+                    String file = new ReportGenerator().createPDF("report.pdf", this);
+
+                    SenderMailAsync mailAsync = new SenderMailAsync(this, "PDF file from android device", "See attachment", file);
+                    mailAsync.execute();
+
+                    logger.info("PDF file was sent to email");
+                } catch (Exception ex) {
+                    logger.info("MainActivity.onResume");
+                }
+
                 break;
             case R.id.btnService:
+                if (serviceRinning) {
+                    Intent serviceIntent = new Intent(this, StatService.class);
+                    stopService(serviceIntent);
+
+                    btnService.setBackgroundResource(R.drawable.server_stop_enabled);
+                    txtService = (TextView) findViewById(R.id.txtService);
+                    txtService.setText(R.string.txtServiceStop);
+
+                    logger.info("MainActivity.onCreate: stop service");
+                } else {
+                    Intent serviceIntent = new Intent(this, StatService.class);
+                    serviceIntent.putExtra(OBSERVE_INSTALLED, chb.isChecked());
+                    startService(serviceIntent);
+
+                    btnService.setBackgroundResource(R.drawable.server_run_enabled);
+                    txtService = (TextView) findViewById(R.id.txtService);
+                    txtService.setText(R.string.txtServiceStart);
+
+                    logger.info("MainActivity.onCreate: start service");
+                }
+
                 break;
 
             case R.id.btnHelp1:
                 break;
+
             case R.id.btnHelp2:
                 break;
+
             case R.id.btnHelp3:
                 break;
         }

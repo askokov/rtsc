@@ -18,6 +18,7 @@ import android.os.ResultReceiver;
 import com.askokov.rtsc.common.Func;
 import com.askokov.rtsc.common.PInfo;
 import com.askokov.rtsc.common.StatHandler;
+import com.askokov.rtsc.db.DBHelper;
 import com.askokov.rtsc.monitor.ProcessesMonitor;
 import com.askokov.rtsc.common.Constant;
 import com.askokov.rtsc.parcel.ListParcel;
@@ -35,6 +36,7 @@ public class StatService extends Service implements Constant {
 
     private SetupReceiver setupReceiver;
     private AlarmReceiver alarmReceiver;
+    private DBHelper dbHelper;
 
     @Override
     public void onCreate() {
@@ -67,6 +69,8 @@ public class StatService extends Service implements Constant {
         logger.info("StatService: register receivers");
 
         //Load applications list from DB
+        dbHelper = new DBHelper(this);
+        dbHelper.createDataBase();
 
         if (intent != null) {
             ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
@@ -93,9 +97,14 @@ public class StatService extends Service implements Constant {
         logger.info("StatService.onDestroy");
 
         unregisterReceiver(setupReceiver);
+        setupReceiver = null;
         unregisterReceiver(alarmReceiver);
+        alarmReceiver = null;
 
         stopAlarm(this);
+
+        dbHelper.close();
+        dbHelper = null;
 
         logger.info("StatService: unregister receivers");
 
@@ -129,7 +138,7 @@ public class StatService extends Service implements Constant {
     private void updateAppList(List<String> toUpdate) {
         clearAppList();
 
-        for(String p : toUpdate) {
+        for (String p : toUpdate) {
             PInfo info = findInfoByPackage(statHandler.getApps(), p);
 
             if (info != null) {
@@ -140,14 +149,14 @@ public class StatService extends Service implements Constant {
     }
 
     private void clearAppList() {
-        for(PInfo info : statHandler.getApps()) {
+        for (PInfo info : statHandler.getApps()) {
             info.setChecked(false);
         }
     }
 
     private PInfo findInfoByPackage(List<PInfo> inMemory, String pName) {
         PInfo result = null;
-        for(PInfo info : inMemory) {
+        for (PInfo info : inMemory) {
             if (pName.equals(info.getPname())) {
                 result = info;
                 break;
@@ -182,7 +191,7 @@ public class StatService extends Service implements Constant {
             }
         }
 
-        for(PInfo dev : inDevice) {
+        for (PInfo dev : inDevice) {
             PInfo mem = findInfoByPackage(inMemory, dev.getPname());
 
             if (mem == null) {
