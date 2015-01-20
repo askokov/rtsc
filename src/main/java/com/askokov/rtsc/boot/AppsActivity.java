@@ -33,7 +33,7 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        logger.info("AppsActivity.onCreate");
+        logger.info("onCreate");
 
         setContentView(R.layout.apps);
 
@@ -45,7 +45,7 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
 
         Intent intent = getIntent();
         boolean observeInstalled = intent.getBooleanExtra(OBSERVE_INSTALLED, false);
-        logger.info("AppsActivity.onCreate: observeInstalled is " + observeInstalled);
+        logger.info("onCreate: observeInstalled is " + observeInstalled);
 
         getAppListRequest(observeInstalled);
     }
@@ -54,20 +54,20 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
     protected void onResume() {
         super.onResume();
 
-        logger.info("AppsActivity.onResume");
+        logger.info("onResume");
     }
 
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.btnClear:
-                logger.info("AppsActivity.onClick: CLEAR");
+                logger.info("onClick: CLEAR");
                 performClear();
 
                 break;
 
             case R.id.btnSave:
-                logger.info("AppsActivity.onClick: SAVE");
+                logger.info("onClick: SAVE");
                 performSave();
 
                 Intent intent = new Intent();
@@ -80,7 +80,7 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
 
     @Override
     protected void onDestroy() {
-        logger.info("MainActivity.onDestroy");
+        logger.info("onDestroy");
 
         super.onDestroy();
     }
@@ -93,7 +93,7 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
 
         sendBroadcast(intent);
 
-        logger.info("MainActivity: sendGetAppListRequest");
+        logger.info("sendGetAppListRequest");
     }
 
     private void sendUpdateAppListRequest(List<String> checked) {
@@ -103,23 +103,12 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
         intent.putExtra(PARCEL, new ListParcel(checked));
         sendBroadcast(intent);
 
-        logger.info("MainActivity: sendUpdateAppListRequest");
-    }
-
-    private void sendClearAppListRequest() {
-        Intent intent = new Intent(StatService.SetupReceiver.ACTION);
-        intent.putExtra(RECEIVER, clearListReceiver);
-        intent.putExtra(EXECUTE, REQUEST_CLEAR_APP_LIST);
-        sendBroadcast(intent);
-
-        logger.info("MainActivity: sendUpdateAppListRequest");
+        logger.info("sendUpdateAppListRequest");
     }
 
     private void performClear() {
         boxAdapter.clearBox();
         boxAdapter.notifyDataSetChanged();
-
-        sendClearAppListRequest();
     }
 
     private void performSave() {
@@ -130,8 +119,8 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
         logger.info("checked: ");
 
         for (PInfo info : box) {
-            logger.info("---" + info.getPname());
-            checked.add(info.getPname());
+            logger.info("---" + info.getPackageName());
+            checked.add(info.getPackageName());
         }
 
         sendUpdateAppListRequest(checked);
@@ -145,7 +134,7 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
 
         @Override
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-            logger.info("GetListResultReceiver.onReceiveResult: resultCode<" + resultCode + ">");
+            logger.info("onReceiveResult: resultCode<" + resultCode + ">");
 
             if (resultCode == STATUS_FINISH) {
                 // создаем адаптер
@@ -167,11 +156,11 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
 
         @Override
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-            logger.info("UpdateListResultReceiver.onReceiveResult: resultCode<" + resultCode + ">");
+            logger.info("onReceiveResult: resultCode<" + resultCode + ">");
 
             if (resultCode == STATUS_FINISH) {
                 String result = resultData.getString(RESULT);
-                logger.info("UpdateListResultReceiver.onReceiveResult: result<" + result + ">");
+                logger.info("onReceiveResult: result<" + result + ">");
             }
         }
     }
@@ -184,11 +173,11 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
 
         @Override
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-            logger.info("ClearListResultReceiver.onReceiveResult: resultCode<" + resultCode + ">");
+            logger.info("onReceiveResult: resultCode<" + resultCode + ">");
 
             if (resultCode == STATUS_FINISH) {
                 String result = resultData.getString(RESULT);
-                logger.info("ClearListResultReceiver.onReceiveResult: result<" + result + ">");
+                logger.info("onReceiveResult: result<" + result + ">");
             }
         }
     }

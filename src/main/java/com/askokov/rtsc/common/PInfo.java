@@ -4,31 +4,42 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class PInfo implements Serializable {
-    private String appname = "";
-    private String pname = "";
+    private Integer id;
+    private String label = "";
+    private String packageName = "";
     private String versionName = "";
     private boolean checked;
+    private boolean stopMonitoring;
     private Date date;
-    private Float time;
+    private long fullTime;
+    private long startTime;
 
     public String prettyPrint() {
-        return appname + "-->" + pname + "-->" + versionName;
+        return label + "-->" + packageName + "-->" + versionName;
     }
 
-    public String getAppname() {
-        return appname;
+    public Integer getId() {
+        return id;
     }
 
-    public void setAppname(final String appname) {
-        this.appname = appname;
+    public void setId(final Integer id) {
+        this.id = id;
     }
 
-    public String getPname() {
-        return pname;
+    public String getLabel() {
+        return label;
     }
 
-    public void setPname(final String pname) {
-        this.pname = pname;
+    public void setLabel(final String label) {
+        this.label = label;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(final String packageName) {
+        this.packageName = packageName;
     }
 
     public String getVersionName() {
@@ -47,6 +58,14 @@ public class PInfo implements Serializable {
         this.checked = checked;
     }
 
+    public boolean isStopMonitoring() {
+        return stopMonitoring;
+    }
+
+    public void setStopMonitoring(final boolean stopMonitoring) {
+        this.stopMonitoring = stopMonitoring;
+    }
+
     public Date getDate() {
         return date;
     }
@@ -55,11 +74,19 @@ public class PInfo implements Serializable {
         this.date = date;
     }
 
-    public Float getTime() {
-        return time;
+    public long getFullTime() {
+        return fullTime;
     }
 
-    public void setTime(final Float time) {
-        this.time = time;
+    public void setFullTime(final long fullTime) {
+        this.fullTime = fullTime;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(final long startTime) {
+        this.startTime = startTime;
     }
 }

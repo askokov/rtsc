@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" android:weightSum="1">
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:stretchColumns="0"
+        android:background="#ffffffff">
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:background="@android:color/holo_blue_light">
+
+            <TextView
+                android:id="@+id/txtHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp" android:gravity="center_vertical|center_horizontal"
+                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
+                android:textAlignment="gravity" android:textStyle="italic" android:text="Header"
+                >
+            </TextView>
+
+            <Button
+                android:id="@+id/btnClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/close">
+            </Button>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:background="@android:color/holo_green_light">
+
+            <TextView
+                android:id="@+id/txtInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp" android:gravity="top|left|fill_vertical"
+                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
+                android:textAlignment="gravity" android:textStyle="italic" android:layout_span="2" android:text="Info">
+            </TextView>
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

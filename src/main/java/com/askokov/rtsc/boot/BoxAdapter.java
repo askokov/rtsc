@@ -57,11 +57,11 @@ public class BoxAdapter extends BaseAdapter {
         }
         PInfo p = getInstalledApp(position);
         // заполняем View данными
-        ((TextView) view.findViewById(R.id.appName)).setText(p.getAppname());
+        ((TextView) view.findViewById(R.id.appName)).setText(p.getLabel());
 
         Drawable icon;
         try {
-            icon = ctx.getPackageManager().getApplicationIcon(p.getPname());
+            icon = ctx.getPackageManager().getApplicationIcon(p.getPackageName());
         } catch (PackageManager.NameNotFoundException ex) {
             icon = ctx.getPackageManager().getDefaultActivityIcon();
         }

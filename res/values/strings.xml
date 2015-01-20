@@ -12,4 +12,16 @@
     <string name="txtServiceStart">Start service</string>
     <string name="txtServiceStop">Stop service</string>
     <string name="txtAddInstalled">Add installed</string>
+
+    <string name="txtInfoHeader">Info Header</string>
+
+    <string-array name="infoArray">
+        <item>Info 1</item>
+        <item>Info 2</item>
+        <item>Info 3</item>
+    </string-array>
+
+    <string name="txtInfo1">Info 1</string>
+    <string name="txtInfo2">Info 2</string>
+    <string name="txtInfo3">Info 3</string>
 </resources>

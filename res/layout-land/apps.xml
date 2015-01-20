@@ -33,6 +33,10 @@
                 android:background="@drawable/delete_enabled" android:layout_gravity="center_horizontal">
             </Button>
 
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:background="@drawable/transparent24"/>
+
             <Button
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"

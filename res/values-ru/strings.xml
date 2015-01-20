@@ -12,4 +12,17 @@
     <string name="txtServiceStart">Запуск сервиса</string>
     <string name="txtServiceStop">Остановка сервиса</string>
     <string name="txtAddInstalled">Добавлять установленные</string>
+
+    <string name="txtInfoHeader">Заголовок</string>
+
+    <string-array name="infoArray">
+        <item>Информация 1</item>
+        <item>Информация 2</item>
+        <item>Информация 3</item>
+    </string-array>
+
+    <string name="txtInfo1">Информация 1</string>
+    <string name="txtInfo2">Информация 2</string>
+    <string name="txtInfo3">Информация 3</string>
+
 </resources>

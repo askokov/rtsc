@@ -11,6 +11,7 @@ public interface Constant {
     int REQUEST_GET_APP_LIST = 100;
     int REQUEST_UPDATE_APP_LIST = 101;
     int REQUEST_CLEAR_APP_LIST = 102;
+    int REQUEST_GET_STAT_LIST = 103;
 
     String EXECUTE = "execute";
     String RESULT = "result";

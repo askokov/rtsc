@@ -1,6 +1,8 @@
 package com.askokov.rtsc.common;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +49,7 @@ public class Func {
     }
 
     public static Map<String, String> getContactByPhone(Context context, String sourcePhoneNumber) {
-        logger.info("ContactUtil: retrieve data for number<" + sourcePhoneNumber + ">");
+        logger.info("Func: retrieve data for number<" + sourcePhoneNumber + ">");
 
         Map<String, String> map = new HashMap<String, String>();
 
@@ -124,11 +126,11 @@ public class Func {
                 }
                 */
             } else {
-                logger.info("ContactUtil: cursor is EMPTY for number<" + sourcePhoneNumber + ">");
+                logger.info("Func: cursor is EMPTY for number<" + sourcePhoneNumber + ">");
             }
             cursor.close();
         } else {
-            logger.info("ContactUtil: cursor is NULL for number<" + sourcePhoneNumber + ">");
+            logger.info("Func: cursor is NULL for number<" + sourcePhoneNumber + ">");
         }
 
         return map;
@@ -143,12 +145,34 @@ public class Func {
                 continue;
             }
             PInfo info = new PInfo();
-            info.setAppname(p.applicationInfo.loadLabel(context.getPackageManager()).toString());
-            info.setPname(p.packageName);
+            info.setLabel(p.applicationInfo.loadLabel(context.getPackageManager()).toString());
+            info.setPackageName(p.packageName);
             info.setVersionName(p.versionName);
 
             res.add(info);
         }
         return res;
+    }
+
+    public static Date truncateDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTime();
+    }
+
+    public static void saveTime(PInfo info) {
+        if (info.isChecked() && !info.isStopMonitoring()) {
+            //Сохранить время
+            info.setFullTime(info.getFullTime() + (System.currentTimeMillis() - info.getStartTime()));
+            info.setStartTime(0);
+
+            logger.info("Func: saveTime for info - " + info.prettyPrint());
+        }
     }
 }
