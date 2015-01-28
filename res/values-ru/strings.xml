@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Сборщик статистики о работающих приложениях</string>
-    <string name="main_name">Настройка сборщика</string>
+    <string name="application_name">Сборщик статистики о работающих приложениях</string>
     <string name="apps_name">Редактирование списка приложений</string>
+    <string name="config_name">Настройка</string>
+    <string name="report_name">Отчет</string>
     <string name="crash_report">Отчет о проблеме</string>
 
-    <string name="txtAppListSetup">Настройка списка приложений</string>
-    <string name="txtEmailSetup">Настройка почты</string>
-    <string name="txtReportSetup">Настройка отчетов</string>
+    <string name="txtAppList">Список приложений</string>
+    <string name="txtConfiguration">Настройки</string>
     <string name="txtGenerateReport">Создать отчет</string>
     <string name="txtServiceStart">Запуск сервиса</string>
     <string name="txtServiceStop">Остановка сервиса</string>
     <string name="txtAddInstalled">Добавлять установленные</string>
 
-    <string name="txtInfoHeader">Заголовок</string>
+    <!--string name="txtInfoHeader">Заголовок</string>
 
     <string-array name="infoArray">
         <item>Информация 1</item>
@@ -23,6 +23,22 @@
 
     <string name="txtInfo1">Информация 1</string>
     <string name="txtInfo2">Информация 2</string>
-    <string name="txtInfo3">Информация 3</string>
+    <string name="txtInfo3">Информация 3</string-->
+
+    <string name="txtStatFromMemory">Статистика в памяти</string>
+    <string name="txtStatFromDatabase">Статистика в базе</string>
+    <string name="txtSaveStatToDatabase">Сохранить статистику в базе</string>
+    <string name="txtConfig">Настройки</string>
+
+    <string name="txtMailByClient">Посылать почту, используя Android-клиента</string>
+    <string name="txtMailByGmail">Посылать почту, используя учетную запись Gmail</string>
+
+    <string name="txtReportNow">Отчет за сегодня</string>
+    <string name="txtReportDate">Отчет за выбранную дату</string>
+    <string name="txtReportAll">Отчет за весь период</string>
+
+    <string name="txtSaveConfig">Сохранить конфигурацию</string>
+    <string name="txtSendReport">Выслать отчет по почте</string>
+    <string name="txtBack">Назад</string>
 
 </resources>

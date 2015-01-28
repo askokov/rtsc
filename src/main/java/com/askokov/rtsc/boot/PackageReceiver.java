@@ -30,12 +30,6 @@ public class PackageReceiver extends BroadcastReceiver {
         } else if (Intent.ACTION_PACKAGE_REPLACED.equals(intent.getAction())) {
         } else if (Intent.ACTION_PACKAGE_REMOVED.equals(intent.getAction())) {
         } else if (Intent.ACTION_PACKAGE_FULLY_REMOVED.equals(intent.getAction())) {
-        } else if (Intent.ACTION_REBOOT.equals(intent.getAction())) {
-
-            dbHelper.saveList(statHandler.getApps());
-        } else if (Intent.ACTION_SHUTDOWN.equals(intent.getAction())) {
-
-            dbHelper.saveList(statHandler.getApps());
         }
     }
 }

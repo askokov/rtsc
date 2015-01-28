@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Running task statistic collector</string>
-    <string name="main_name">Setup collector</string>
+    <string name="application_name">Running task statistic collector</string>
     <string name="apps_name">Edit task list</string>
-    <string name="crash_report">Crash report</string>
+    <string name="config_name">Configuration</string>
+    <string name="report_name">Report</string>
+    <string name="crash_report">Отчет о проблеме</string>
 
-    <string name="txtAppListSetup">Configure applications list</string>
-    <string name="txtEmailSetup">Configure e-mail</string>
-    <string name="txtReportSetup">Configure report</string>
+    <string name="txtAppList">Applications list</string>
+    <string name="txtConfiguration">Configuration</string>
     <string name="txtGenerateReport">Generate report</string>
     <string name="txtServiceStart">Start service</string>
     <string name="txtServiceStop">Stop service</string>
     <string name="txtAddInstalled">Add installed</string>
 
-    <string name="txtInfoHeader">Info Header</string>
+    <!--string name="txtInfoHeader">Info Header</string>
 
     <string-array name="infoArray">
         <item>Info 1</item>
@@ -23,5 +23,22 @@
 
     <string name="txtInfo1">Info 1</string>
     <string name="txtInfo2">Info 2</string>
-    <string name="txtInfo3">Info 3</string>
+    <string name="txtInfo3">Info 3</string-->
+
+    <string name="txtStatFromMemory">Statistic from memory</string>
+    <string name="txtStatFromDatabase">Statistic from database</string>
+    <string name="txtSaveStatToDatabase">Save statistic to database</string>
+    <string name="txtConfig">Configuration</string>
+
+    <string name="txtMailByClient">Send e-mail by Android client</string>
+    <string name="txtMailByGmail">Send e-mail by Gmail account</string>
+
+    <string name="txtReportNow">Report by current date</string>
+    <string name="txtReportDate">Report by select date</string>
+    <string name="txtReportAll">Report by all</string>
+
+    <string name="txtSaveConfig">Save configuration</string>
+    <string name="txtSendReport">Send report to e-mail</string>
+    <string name="txtBack">Back</string>
+
 </resources>

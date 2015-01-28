@@ -30,19 +30,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/delete_enabled" android:layout_gravity="center_horizontal">
+                android:background="@drawable/delete_enabled" android:layout_gravity="center_vertical|right">
             </Button>
 
             <ImageView android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:background="@drawable/transparent24"/>
+                       android:background="@drawable/transparent24"
+                       android:clickable="false"/>
 
             <Button
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/save_enabled" android:layout_gravity="center_horizontal"
+                android:background="@drawable/save_enabled" android:layout_gravity="center_vertical|right"
                 >
             </Button>
         </LinearLayout>

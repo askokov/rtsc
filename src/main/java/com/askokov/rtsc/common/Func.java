@@ -9,6 +9,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.net.Uri;
@@ -167,12 +168,37 @@ public class Func {
     }
 
     public static void saveTime(PInfo info) {
-        if (info.isChecked() && !info.isStopMonitoring()) {
+        saveTime(info, false);
+    }
+
+    public static void saveTime(PInfo info, boolean force) {
+        if (info.isChecked() && (!info.isStopMonitoring() || force)) {
             //Сохранить время
             info.setFullTime(info.getFullTime() + (System.currentTimeMillis() - info.getStartTime()));
-            info.setStartTime(0);
+            info.setStartTime(System.currentTimeMillis());
 
             logger.info("Func: saveTime for info - " + info.prettyPrint());
         }
+    }
+
+    public static boolean saveConfiguration(SharedPreferences pref, Configuration configuration) {
+        logger.info("Save configuration");
+
+        SharedPreferences.Editor ed = pref.edit();
+        ed.putBoolean(Constant.ADD_INSTALLED, configuration.isAddInstalled());
+        ed.putString(Constant.REPORT_TYPE, configuration.getReportType().name());
+        ed.putString(Constant.MAIL_TYPE, configuration.getMailType().name());
+        return ed.commit();
+    }
+
+    public static Configuration loadConfiguration(SharedPreferences pref) {
+        logger.info("Load configuration");
+
+        Configuration configuration = new Configuration();
+        configuration.setAddInstalled(pref.getBoolean(Constant.ADD_INSTALLED, false));
+        configuration.setReportType(ReportType.valueOf(pref.getString(Constant.REPORT_TYPE, ReportType.NOW.name())));
+        configuration.setMailType(MailType.valueOf(pref.getString(Constant.MAIL_TYPE, MailType.CLIENT.name())));
+
+        return configuration;
     }
 }

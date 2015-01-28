@@ -25,7 +25,6 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
 
     private ResultReceiver getListReceiver = new GetListResultReceiver(null);
     private ResultReceiver updateListReceiver = new UpdateListResultReceiver(null);
-    private ResultReceiver clearListReceiver = new ClearListResultReceiver(null);
 
     private BoxAdapter boxAdapter;
     private ListView lvMain;
@@ -86,7 +85,7 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
     }
 
     private void getAppListRequest(boolean observeInstalled) {
-        Intent intent = new Intent(StatService.SetupReceiver.ACTION);
+        Intent intent = new Intent(StatService.StatReceiver.ACTION);
         intent.putExtra(EXECUTE, REQUEST_GET_APP_LIST);
         intent.putExtra(RECEIVER, getListReceiver);
         intent.putExtra(OBSERVE_INSTALLED, observeInstalled);
@@ -97,7 +96,7 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
     }
 
     private void sendUpdateAppListRequest(List<String> checked) {
-        Intent intent = new Intent(StatService.SetupReceiver.ACTION);
+        Intent intent = new Intent(StatService.StatReceiver.ACTION);
         intent.putExtra(RECEIVER, updateListReceiver);
         intent.putExtra(EXECUTE, REQUEST_UPDATE_APP_LIST);
         intent.putExtra(PARCEL, new ListParcel(checked));
@@ -136,7 +135,7 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
             logger.info("onReceiveResult: resultCode<" + resultCode + ">");
 
-            if (resultCode == STATUS_FINISH) {
+            if (resultCode == REQUEST_GET_APP_LIST) {
                 // создаем адаптер
                 PInfoParcel parcel = (PInfoParcel) resultData.getSerializable(RESULT);
                 boxAdapter = new BoxAdapter(AppsActivity.this, parcel.getList());
@@ -158,28 +157,10 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
             logger.info("onReceiveResult: resultCode<" + resultCode + ">");
 
-            if (resultCode == STATUS_FINISH) {
+            if (resultCode == REQUEST_UPDATE_APP_LIST) {
                 String result = resultData.getString(RESULT);
                 logger.info("onReceiveResult: result<" + result + ">");
             }
         }
     }
-
-    class ClearListResultReceiver extends ResultReceiver {
-
-        public ClearListResultReceiver(final Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-            logger.info("onReceiveResult: resultCode<" + resultCode + ">");
-
-            if (resultCode == STATUS_FINISH) {
-                String result = resultData.getString(RESULT);
-                logger.info("onReceiveResult: result<" + result + ">");
-            }
-        }
-    }
-
 }

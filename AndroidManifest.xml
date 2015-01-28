@@ -14,10 +14,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name"
+    <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/application_name"
                  android:name="com.askokov.rtsc.boot.MainApplication" android:theme="@style/AppTheme">
 
-        <activity android:label="@string/main_name" android:name=".boot.MainActivity">
+        <activity android:label="@string/application_name" android:name=".boot.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -25,6 +25,20 @@
         </activity>
 
         <activity android:label="@string/apps_name" android:name=".boot.AppsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:label="@string/config_name" android:name=".boot.ConfigActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:label="@string/report_name" android:name=".boot.ReportActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.DEFAULT"/>

@@ -170,8 +170,11 @@ public File getAlbumStorageDir(String albumName) {
         //database.execSQL("CREATE TABLE STAT (" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT NOT NULL,
         // package_name TEXT NOT NULL, version_name TEXT NOT NULL, date INTEGER NULL, full_time INTEGER NOT NULL)");
         // заполняем ее
+        int count = 0;
         for (PInfo info : list) {
             if (info.getFullTime() > 0) {
+                count++;
+
                 cv.clear();
                 cv.put("label", info.getLabel());
                 cv.put("package_name", info.getPackageName());
@@ -188,7 +191,7 @@ public File getAlbumStorageDir(String albumName) {
         }
 
         db.close();
-        logger.info("List saved");
+        logger.info("List saved: size<" + count + ">");
     }
 
     public void createDataBase() {

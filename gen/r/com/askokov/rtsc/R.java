@@ -8,86 +8,121 @@
 package com.askokov.rtsc;
 
 public final class R {
-    public static final class array {
-        public static final int infoArray=0x7f050000;
-    }
     public static final class attr {
     }
     public static final class drawable {
-        public static final int border=0x7f020000;
-        public static final int button_background=0x7f020001;
+        public static final int button_background=0x7f020000;
+        public static final int button_shape=0x7f020001;
         public static final int close=0x7f020002;
         public static final int configuration_disabled=0x7f020003;
         public static final int configuration_enabled=0x7f020004;
-        public static final int delete_disabled=0x7f020005;
-        public static final int delete_enabled=0x7f020006;
-        public static final int email_enabled=0x7f020007;
-        public static final int ic_launcher=0x7f020008;
-        public static final int printer_enabled=0x7f020009;
-        public static final int question_disabled=0x7f02000a;
-        public static final int question_enabled=0x7f02000b;
-        public static final int report_enabled=0x7f02000c;
-        public static final int save_disabled=0x7f02000d;
-        public static final int save_enabled=0x7f02000e;
-        public static final int server_run_enabled=0x7f02000f;
-        public static final int server_stop_enabled=0x7f020010;
-        public static final int transparent16=0x7f020011;
-        public static final int transparent24=0x7f020012;
-        public static final int transparent32=0x7f020013;
-        public static final int transparent48=0x7f020014;
+        public static final int custom_divider=0x7f020005;
+        public static final int delete_disabled=0x7f020006;
+        public static final int delete_enabled=0x7f020007;
+        public static final int email_enabled=0x7f020008;
+        public static final int ic_launcher=0x7f020009;
+        public static final int line_horizontal=0x7f02000a;
+        public static final int printer_enabled=0x7f02000b;
+        public static final int question_disabled=0x7f02000c;
+        public static final int question_enabled=0x7f02000d;
+        public static final int report_enabled=0x7f02000e;
+        public static final int save_disabled=0x7f02000f;
+        public static final int save_enabled=0x7f020010;
+        public static final int server_run_enabled=0x7f020011;
+        public static final int server_stop_enabled=0x7f020012;
+        public static final int transparent16=0x7f020013;
+        public static final int transparent24=0x7f020014;
+        public static final int transparent32=0x7f020015;
+        public static final int transparent48=0x7f020016;
     }
     public static final class id {
-        public static final int appIcon=0x7f070008;
-        public static final int appName=0x7f070007;
-        public static final int btnAppListSetup=0x7f07000a;
-        public static final int btnClear=0x7f070001;
-        public static final int btnClose=0x7f070004;
-        public static final int btnEmailSetup=0x7f07000d;
-        public static final int btnGenerateReport=0x7f070013;
-        public static final int btnHelp1=0x7f07000c;
-        public static final int btnHelp2=0x7f07000f;
-        public static final int btnHelp3=0x7f070012;
-        public static final int btnHelp4=0x7f070015;
-        public static final int btnHelp5=0x7f070018;
-        public static final int btnHelp6=0x7f07001b;
-        public static final int btnReportSetup=0x7f070010;
-        public static final int btnSave=0x7f070002;
-        public static final int btnService=0x7f070016;
-        public static final int cbAddInstalled=0x7f070019;
-        public static final int cbBox=0x7f070006;
-        public static final int lvMain=0x7f070000;
-        public static final int tblMain=0x7f070009;
-        public static final int txtAddInstalled=0x7f07001a;
-        public static final int txtAppListSetup=0x7f07000b;
-        public static final int txtEmailSetup=0x7f07000e;
-        public static final int txtGenerateReport=0x7f070014;
-        public static final int txtHeader=0x7f070003;
-        public static final int txtInfo=0x7f070005;
-        public static final int txtReportSetup=0x7f070011;
-        public static final int txtService=0x7f070017;
+        public static final int appIcon=0x7f060013;
+        public static final int appName=0x7f060012;
+        public static final int btnAppList=0x7f060015;
+        public static final int btnCancel=0x7f06001e;
+        public static final int btnClear=0x7f060001;
+        public static final int btnClose=0x7f06000f;
+        public static final int btnConfiguration=0x7f060016;
+        public static final int btnGenerateReport=0x7f060017;
+        public static final int btnSave=0x7f060002;
+        public static final int btnSaveConfig=0x7f06000d;
+        public static final int btnSaveStatToDatabase=0x7f06001b;
+        public static final int btnSendReport=0x7f06001d;
+        public static final int btnService=0x7f060018;
+        public static final int btnStatFromDatabase=0x7f06001a;
+        public static final int btnStatFromMemory=0x7f060019;
+        public static final int cbAddInstalled=0x7f060005;
+        public static final int cbBox=0x7f060011;
+        public static final int editDate=0x7f06001c;
+        public static final int groupMail=0x7f060006;
+        public static final int groupReport=0x7f060009;
+        public static final int lvMain=0x7f060000;
+        public static final int radioMailAndroid=0x7f060007;
+        public static final int radioMailGmail=0x7f060008;
+        public static final int radioReportAll=0x7f06000c;
+        public static final int radioReportDate=0x7f06000b;
+        public static final int radioReportNow=0x7f06000a;
+        public static final int tblConfig=0x7f060003;
+        public static final int tblMain=0x7f060014;
+        public static final int textView=0x7f060004;
+        public static final int txtHeader=0x7f06000e;
+        public static final int txtInfo=0x7f060010;
     }
     public static final class layout {
         public static final int apps=0x7f030000;
-        public static final int info=0x7f030001;
-        public static final int item=0x7f030002;
-        public static final int main=0x7f030003;
+        public static final int config=0x7f030001;
+        public static final int info=0x7f030002;
+        public static final int item=0x7f030003;
+        public static final int main=0x7f030004;
+        public static final int report=0x7f030005;
     }
     public static final class string {
-        public static final int app_name=0x7f040000;
-        public static final int apps_name=0x7f040002;
-        public static final int crash_report=0x7f040003;
-        public static final int main_name=0x7f040001;
+        public static final int application_name=0x7f040000;
+        public static final int apps_name=0x7f040001;
+        public static final int config_name=0x7f040002;
+        public static final int crash_report=0x7f040004;
+        public static final int report_name=0x7f040003;
         public static final int txtAddInstalled=0x7f04000a;
-        public static final int txtAppListSetup=0x7f040004;
-        public static final int txtEmailSetup=0x7f040005;
+        public static final int txtAppList=0x7f040005;
+        public static final int txtBack=0x7f040016;
+        public static final int txtConfig=0x7f04000e;
+        public static final int txtConfiguration=0x7f040006;
         public static final int txtGenerateReport=0x7f040007;
-        public static final int txtInfo1=0x7f04000c;
-        public static final int txtInfo2=0x7f04000d;
-        public static final int txtInfo3=0x7f04000e;
-        public static final int txtInfoHeader=0x7f04000b;
-        public static final int txtReportSetup=0x7f040006;
+        public static final int txtMailByClient=0x7f04000f;
+        public static final int txtMailByGmail=0x7f040010;
+        public static final int txtReportAll=0x7f040013;
+        public static final int txtReportDate=0x7f040012;
+        public static final int txtReportNow=0x7f040011;
+        public static final int txtSaveConfig=0x7f040014;
+        public static final int txtSaveStatToDatabase=0x7f04000d;
+        public static final int txtSendReport=0x7f040015;
         public static final int txtServiceStart=0x7f040008;
         public static final int txtServiceStop=0x7f040009;
+        public static final int txtStatFromDatabase=0x7f04000c;
+        /** string name="txtInfoHeader">Info Header</string>
+
+    <string-array name="infoArray">
+        <item>Info 1</item>
+        <item>Info 2</item>
+        <item>Info 3</item>
+    </string-array>
+
+    <string name="txtInfo1">Info 1</string>
+    <string name="txtInfo2">Info 2</string>
+    <string name="txtInfo3">Info 3</string
+string name="txtInfoHeader">Заголовок</string>
+
+    <string-array name="infoArray">
+        <item>Информация 1</item>
+        <item>Информация 2</item>
+        <item>Информация 3</item>
+    </string-array>
+
+    <string name="txtInfo1">Информация 1</string>
+    <string name="txtInfo2">Информация 2</string>
+    <string name="txtInfo3">Информация 3</string
+         */
+        public static final int txtStatFromMemory=0x7f04000b;
     }
     public static final class style {
         /** 
@@ -109,12 +144,12 @@ public final class R {
             backward-compatibility can go here.
         
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f050000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int AppTheme=0x7f050001;
     }
 }

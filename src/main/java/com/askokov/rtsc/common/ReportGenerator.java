@@ -9,6 +9,8 @@ import java.util.Date;
 
 import android.content.Context;
 import android.os.Environment;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -28,6 +30,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class ReportGenerator {
+    private static final Logger logger = LoggerFactory.getLogger(ReportGenerator.class);
     private static final String FONT_PATH = "/assets/fonts/DroidSans.ttf";
 
     private Font catFont;
@@ -45,8 +48,7 @@ public class ReportGenerator {
     }
 
     private File createFile(String fileName, Context context) {
-        final String APPLICATION_PACKAGE_NAME = context.getPackageName();
-        File path = new File(Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME);
+        File path = new File(Environment.getExternalStorageDirectory(), context.getPackageName());
         if (!path.exists()) {
             path.mkdir();
         }
@@ -177,11 +179,15 @@ public class ReportGenerator {
         // t.setBorderWidth(1);
 
         PdfPCell c1 = new PdfPCell(new Phrase("Дата", subFont));
-        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+        c1.setHorizontalAlignment(Element.ALIGN_LEFT);
         table.addCell(c1);
 
         c1 = new PdfPCell(new Phrase("Программа", subFont));
-        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+        c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(c1);
+
+        c1 = new PdfPCell(new Phrase("Пакет", subFont));
+        c1.setHorizontalAlignment(Element.ALIGN_LEFT);
         table.addCell(c1);
 
         c1 = new PdfPCell(new Phrase("Время", subFont));
@@ -196,19 +202,21 @@ public class ReportGenerator {
             table.addCell(info.getLabel());
             table.addCell(info.getPackageName());
 
-            long fullSec = info.getFullTime() / 1000000;
+            long fullSec = info.getFullTime() / 1000;
+            logger.info("--- fullTime<" + info.getFullTime() + ">");
 
             long hour = fullSec / 3600;
             long hourOst = fullSec % 3600;
             long min = hourOst / 60;
             long sec = hourOst % 60;
-            String time = String.format("%02dч :%02dмин : %02d сек", hour, min, sec);
+
+            String time = String.format("%02dч : %02dмин : %02d сек", hour, min, sec);
+            logger.info("--- time<" + time + ">");
 
             table.addCell(time);
         }
 
         section.add(table);
-
     }
 
     private void createList(Section subCatPart) {

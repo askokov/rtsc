@@ -1,7 +1,5 @@
 package com.askokov.rtsc.boot;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
@@ -14,11 +12,11 @@ import android.os.ResultReceiver;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import com.askokov.rtsc.R;
+import com.askokov.rtsc.common.Configuration;
 import com.askokov.rtsc.common.Constant;
-import com.askokov.rtsc.common.PInfo;
+import com.askokov.rtsc.common.Func;
 import com.askokov.rtsc.common.ReportGenerator;
 import com.askokov.rtsc.log.LogConfigurator;
 import com.askokov.rtsc.mail.SenderMailAsync;
@@ -29,15 +27,12 @@ import com.google.code.microlog4android.LoggerFactory;
 public class MainActivity extends Activity implements Constant, View.OnClickListener {
 
     private static final Logger logger = LoggerFactory.getLogger(MainActivity.class);
-    private static final String SAVED_CHECK_BOX = "savedCheckBox";
-    private static final String LABEL = "saveLabel";
 
-    private CheckBox chb;
-    private SharedPreferences pref;
     private Button btnService;
-    private Button btnAppListSetup;
+    private Button btnAppList;
     private TextView txtService;
-    private boolean serviceRinning;
+    private boolean serviceRunning;
+    private Configuration configuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,65 +43,59 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
         setContentView(R.layout.main);
 
-        btnAppListSetup = (Button) findViewById(R.id.btnAppListSetup);
-        btnAppListSetup.setOnClickListener(this);
+        btnAppList = (Button) findViewById(R.id.btnAppList);
+        btnAppList.setOnClickListener(this);
 
-        Button btnEmailSetup = (Button) findViewById(R.id.btnEmailSetup);
-        btnEmailSetup.setOnClickListener(this);
-
-        Button btnReportSetup = (Button) findViewById(R.id.btnReportSetup);
-        btnReportSetup.setOnClickListener(this);
+        Button btnConfiguration = (Button) findViewById(R.id.btnConfiguration);
+        btnConfiguration.setOnClickListener(this);
 
         Button btnGenerateReport = (Button) findViewById(R.id.btnGenerateReport);
         btnGenerateReport.setOnClickListener(this);
 
         btnService = (Button) findViewById(R.id.btnService);
         btnService.setOnClickListener(this);
-        serviceRinning = false;
+        serviceRunning = false;
 
         if (isServiceRunning()) {
-            btnService.setBackgroundResource(R.drawable.server_run_enabled);
-            serviceRinning = true;
-            txtService = (TextView) findViewById(R.id.txtService);
-            txtService.setText(R.string.txtServiceStop);
-            btnGenerateReport.setOnClickListener(this);
+            serviceRunning = true;
+            btnService.setText(R.string.txtServiceStop);
 
             logger.info("onCreate: service running");
         } else {
-            btnAppListSetup.setEnabled(false);
+            btnAppList.setEnabled(false);
         }
 
-        chb = (CheckBox) findViewById(R.id.cbAddInstalled);
-        if (!loadPreferences()) {
-            chb.setChecked(false);
-        }
+        SharedPreferences pref = getPreferences(MODE_PRIVATE);
+        configuration = Func.loadConfiguration(pref);
 
-        Button btnHelp1 = (Button) findViewById(R.id.btnHelp1);
-        btnHelp1.setOnClickListener(this);
+        Button btnStatFromMemory = (Button) findViewById(R.id.btnStatFromMemory);
+        btnStatFromMemory.setOnClickListener(this);
 
-        Button btnHelp2 = (Button) findViewById(R.id.btnHelp2);
-        btnHelp2.setOnClickListener(this);
+        Button btnStatFromDatabase = (Button) findViewById(R.id.btnStatFromDatabase);
+        btnStatFromDatabase.setOnClickListener(this);
 
-        Button btnHelp3 = (Button) findViewById(R.id.btnHelp3);
-        btnHelp3.setOnClickListener(this);
+        Button btnSaveStatToDatabase = (Button) findViewById(R.id.btnSaveStatToDatabase);
+        btnSaveStatToDatabase.setOnClickListener(this);
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
+
         logger.info("onResume");
     }
 
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-            case R.id.btnAppListSetup:
-                logger.info("onClick: btnAppListSetup");
+            case R.id.btnAppList:
+                logger.info("onClick: btnAppList");
 
-                if (serviceRinning) {
+                if (serviceRunning) {
                     logger.info("onClick: service running...");
 
                     Intent intent = new Intent(this, AppsActivity.class);
-                    intent.putExtra(OBSERVE_INSTALLED, chb.isChecked());
+                    intent.putExtra(OBSERVE_INSTALLED, configuration.isAddInstalled());
                     startActivityForResult(intent, REQUEST_GET_APP_LIST);
                 } else {
                     logger.info("onClick: service stopped...");
@@ -114,79 +103,62 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
                 break;
 
-            case R.id.btnEmailSetup:
-                break;
+            case R.id.btnConfiguration:
+                logger.info("onClick: btnConfiguration");
 
-            case R.id.btnReportSetup:
+                Intent intent = new Intent(this, AppsActivity.class);
+                intent.putExtra(CONFIGURATION, configuration);
+                startActivityForResult(intent, REQUEST_SAVE_CONFIGURATION);
+
                 break;
 
             case R.id.btnGenerateReport:
                 logger.info("onClick: btnGenerateReport");
 
-                List<PInfo> list = getStatListRequest();
-                if (!list.isEmpty()) {
-                    String file = null;
-                    try {
-                        file = new ReportGenerator().createPDF("report.pdf", this, list);
-                    } catch (Exception ex) {
-                        logger.info("onClick: createPDF exception", ex);
-                    }
-
-                    if (file != null) {
-                        SenderMailAsync mailAsync = new SenderMailAsync(this, "Statistic report", "See attachment", file);
-                        mailAsync.execute();
-
-                        logger.info("PDF file was sent to email");
-                    }
-                } else {
-                    logger.info("Statistic missed");
-                }
+                //statRequest();
 
                 break;
             case R.id.btnService:
                 logger.info("MainActivity.onClick: btnService");
 
-                if (serviceRinning) {
+                if (serviceRunning) {
                     Intent serviceIntent = new Intent(this, StatService.class);
                     stopService(serviceIntent);
-                    serviceRinning = false;
-                    btnAppListSetup.setEnabled(false);
+                    serviceRunning = false;
+                    btnAppList.setEnabled(false);
 
-                    btnService.setBackgroundResource(R.drawable.server_stop_enabled);
-                    txtService = (TextView) findViewById(R.id.txtService);
-                    txtService.setText(R.string.txtServiceStart);
+                    btnService.setText(R.string.txtServiceStart);
 
                     logger.info("onCreate: stop service");
                 } else {
                     Intent serviceIntent = new Intent(this, StatService.class);
-                    serviceIntent.putExtra(OBSERVE_INSTALLED, chb.isChecked());
+                    serviceIntent.putExtra(OBSERVE_INSTALLED, configuration.isAddInstalled());
                     startService(serviceIntent);
-                    serviceRinning = true;
-                    btnAppListSetup.setEnabled(true);
+                    serviceRunning = true;
+                    btnAppList.setEnabled(true);
 
-                    btnService.setBackgroundResource(R.drawable.server_run_enabled);
-                    txtService = (TextView) findViewById(R.id.txtService);
-                    txtService.setText(R.string.txtServiceStop);
+                    btnService.setText(R.string.txtServiceStop);
 
                     logger.info("onCreate: start service");
                 }
 
                 break;
 
-            case R.id.btnHelp1:
-                showInfo(0);
+            case R.id.btnStatFromMemory:
+                statMemoryRequest();
 
                 break;
 
-            case R.id.btnHelp2:
-                showInfo(1);
+            case R.id.btnStatFromDatabase:
+                statDatabaseRequest();
 
                 break;
 
-            case R.id.btnHelp3:
-                showInfo(2);
+            case R.id.btnSaveStatToDatabase:
+                saveStatRequest();
 
                 break;
+
         }
     }
 
@@ -208,7 +180,9 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
     @Override
     protected void onDestroy() {
         logger.info("onDestroy");
-        savePreferences();
+
+        SharedPreferences pref = getPreferences(MODE_PRIVATE);
+        Func.saveConfiguration(pref, configuration);
 
         super.onDestroy();
     }
@@ -223,108 +197,119 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         return false;
     }
 
-    private boolean savePreferences() {
-        logger.info("savePreferences: saved");
+    private void statMemoryRequest() {
+        logger.info("Statistic from memory request start");
+        StatReportReceiver receiver = new StatReportReceiver(null, this);
 
-        pref = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = pref.edit();
-        ed.putBoolean(SAVED_CHECK_BOX, chb.isChecked());
-        ed.putString(LABEL, LABEL);
-        return ed.commit();
-    }
-
-    private boolean loadPreferences() {
-        pref = getPreferences(MODE_PRIVATE);
-        String label = pref.getString(LABEL, null);
-
-        if (label != null) {
-            boolean ch = pref.getBoolean(SAVED_CHECK_BOX, false);
-            chb.setChecked(ch);
-            logger.info("loadPreferences: loaded<" + ch + ">");
-        }
-
-        return label != null;
-    }
-
-    private List<PInfo> getStatListRequest() {
-        GetStatReceiver receiver = new GetStatReceiver(null);
-
-        Intent intent = new Intent(StatService.SetupReceiver.ACTION);
-        intent.putExtra(EXECUTE, REQUEST_GET_STAT_LIST);
+        Intent intent = new Intent(StatService.StatReceiver.ACTION);
+        intent.putExtra(EXECUTE, REQUEST_GET_STAT_FROM_MEMORY);
         intent.putExtra(RECEIVER, receiver);
 
         sendBroadcast(intent);
+        logger.info("Statistic from memory request finish");
+    }
 
-        logger.info("getStatListRequest");
+    private void statDatabaseRequest() {
+        logger.info("Statistic from database request start");
+        StatReportReceiver receiver = new StatReportReceiver(null, this);
 
-        return receiver.getList();
+        Intent intent = new Intent(StatService.StatReceiver.ACTION);
+        intent.putExtra(EXECUTE, REQUEST_GET_STAT_FROM_DATABASE);
+        intent.putExtra(RECEIVER, receiver);
+
+        sendBroadcast(intent);
+        logger.info("Statistic from database request finish");
+    }
+
+    private void saveStatRequest() {
+        logger.info("Save statistic request start");
+        StatReportReceiver receiver = new StatReportReceiver(null, this);
+
+        Intent intent = new Intent(StatService.StatReceiver.ACTION);
+        intent.putExtra(EXECUTE, REQUEST_SAVE_STAT_TO_DATABASE);
+        intent.putExtra(RECEIVER, receiver);
+
+        sendBroadcast(intent);
+        logger.info("Save statistic request finish");
     }
 
     public void showInfo(int idx) {
 
         final Dialog infoDialog = new Dialog(this);
         infoDialog.setCancelable(false);
-        //final AlertDialog.Builder infoDialog = new AlertDialog.Builder(this);
-        //infoDialog.setTitle(R.string.txtInfoHeader);
 
         infoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = getLayoutInflater().inflate(R.layout.info, null);
         infoDialog.setContentView(view);
 
+        /*
         final TextView text = (TextView) view.findViewById(R.id.txtInfo);
         String[] infoArray = getResources().getStringArray(R.array.infoArray);
         text.setText(infoArray[idx]);
+        */
 
         Button btnClose = (Button) view.findViewById(R.id.btnClose);
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 infoDialog.dismiss();
-                //infoDialog.cancel();
             }
         });
 
-        /*
-        ratingdialog.setPositiveButton("Готово",
-            new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    txtView.setText(String.valueOf(rating.getRating()));
-                    dialog.dismiss();
-                }
-            })
-
-            .setNegativeButton("Отмена",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        */
-
-        //infoDialog.create();
         infoDialog.show();
     }
 
-    class GetStatReceiver extends ResultReceiver {
-        List<PInfo> list;
+    class StatReportReceiver extends ResultReceiver {
+        private Context context;
 
-        public GetStatReceiver(final Handler handler) {
+        public StatReportReceiver(final Handler handler, final Context context) {
             super(handler);
+            this.context = context;
         }
 
         @Override
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-            logger.info("onReceiveResult: resultCode<" + resultCode + ">");
+            logger.info("StatReportReceiver.onReceiveResult: resultCode<" + resultCode + ">");
 
-            if (resultCode == STATUS_FINISH) {
-                // создаем адаптер
+            if (resultCode == REQUEST_GET_STAT_FROM_MEMORY) {
+                logger.info("StatReportReceiver: get statistic from memory");
+
                 PInfoParcel parcel = (PInfoParcel) resultData.getSerializable(RESULT);
-                list = parcel.getList();
+                sendReportToEmail(parcel);
+
+            } else if (resultCode == REQUEST_GET_STAT_FROM_DATABASE) {
+                logger.info("StatReportReceiver: get statistic from database");
+
+                PInfoParcel parcel = (PInfoParcel) resultData.getSerializable(RESULT);
+                sendReportToEmail(parcel);
+
+            } else if (resultCode == REQUEST_SAVE_STAT_TO_DATABASE) {
+                String result = resultData.getString(RESULT);
+
+                logger.info("StatReportReceiver: save statistic to database --> " + result);
             }
+
+            logger.info("StatReportReceiver.onReceiveResult: finish");
         }
 
-        public List<PInfo> getList() {
-            return list;
+        private void sendReportToEmail(PInfoParcel parcel) {
+            if (!parcel.getList().isEmpty()) {
+                String file = null;
+                try {
+                    file = new ReportGenerator().createPDF("report.pdf", context, parcel.getList());
+                } catch (Exception ex) {
+                    logger.info("StatReportReceiver: createPDF exception", ex);
+                }
+
+                if (file != null) {
+                    SenderMailAsync mailAsync = new SenderMailAsync(context, "Statistic report", "See attachment", file);
+                    mailAsync.execute();
+
+                    logger.info("StatReportReceiver: PDF file was sent to email");
+                }
+            } else {
+                logger.info("StatReportReceiver: Statistic missed");
+            }
         }
     }
 }

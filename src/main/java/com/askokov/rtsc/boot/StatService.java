@@ -32,15 +32,16 @@ import com.google.code.microlog4android.LoggerFactory;
 public class StatService extends Service implements Constant {
     private static final Logger logger = LoggerFactory.getLogger(StatService.class);
     // restart service every 120 seconds
-    private static final long REPEAT_TIME = 1000 * 120;
+    private static final long REPEAT_TIME = 1000 * 60;
     private static final String DB_NAME = "/store.db"; // имя БД
 
     private StatHandler statHandler;
     private final Object sync = new Object();
 
-    private SetupReceiver setupReceiver;
+    private StatReceiver statReceiver;
     private AlarmReceiver alarmReceiver;
     private PackageReceiver packageReceiver;
+    private RebootReceiver rebootReceiver;
     private DBHelper dbHelper;
 
     @Override
@@ -59,8 +60,7 @@ public class StatService extends Service implements Constant {
     public int onStartCommand(Intent intent, int flags, int startId) {
         logger.info("onStartCommand(" + (intent != null ? intent.getAction() : "null") + ")");
 
-        final String APPLICATION_PACKAGE_NAME = getPackageName();
-        File path = new File(Environment.getExternalStorageDirectory(), APPLICATION_PACKAGE_NAME);
+        File path = new File(Environment.getExternalStorageDirectory(), getPackageName());
         if (!path.exists()) {
             path.mkdir();
         }
@@ -75,10 +75,10 @@ public class StatService extends Service implements Constant {
         List<PInfo> list = dbHelper.loadList(Func.truncateDate(new Date()));
         statHandler = new StatHandler(list);
 
-        setupReceiver = new SetupReceiver();
+        statReceiver = new StatReceiver();
         IntentFilter setupFilter = new IntentFilter();
-        setupFilter.addAction(SetupReceiver.ACTION);
-        registerReceiver(setupReceiver, setupFilter);
+        setupFilter.addAction(StatReceiver.ACTION);
+        registerReceiver(statReceiver, setupFilter);
 
         alarmReceiver = new AlarmReceiver();
         IntentFilter alarmFilter = new IntentFilter();
@@ -95,14 +95,19 @@ public class StatService extends Service implements Constant {
         packageFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
         packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         packageFilter.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);
-        packageFilter.addAction(Intent.ACTION_REBOOT);
-        packageFilter.addAction(Intent.ACTION_SHUTDOWN);
         registerReceiver(packageReceiver, packageFilter);
+
+        rebootReceiver = new RebootReceiver(dbHelper, statHandler);
+        IntentFilter rebootFilter = new IntentFilter();
+
+        rebootFilter.addAction(Intent.ACTION_REBOOT);
+        rebootFilter.addAction(Intent.ACTION_SHUTDOWN);
+        registerReceiver(rebootReceiver, rebootFilter);
 
         startAlarm(this);
 
         logger.info("Register receivers");
-
+        /*
         if (intent != null) {
             ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
 
@@ -119,6 +124,7 @@ public class StatService extends Service implements Constant {
                 logger.info("Missing result receiver");
             }
         }
+        */
 
         return START_STICKY;
     }
@@ -127,19 +133,21 @@ public class StatService extends Service implements Constant {
     public void onDestroy() {
         logger.info("onDestroy");
 
-        unregisterReceiver(setupReceiver);
-        setupReceiver = null;
+        unregisterReceiver(statReceiver);
+        statReceiver = null;
         unregisterReceiver(alarmReceiver);
         alarmReceiver = null;
         unregisterReceiver(packageReceiver);
         packageReceiver = null;
+        unregisterReceiver(rebootReceiver);
+        rebootReceiver = null;
+        logger.info("Unregister receivers");
 
         stopAlarm(this);
 
         dbHelper.saveList(statHandler.getApps());
         dbHelper = null;
-
-        logger.info("Unregister receivers");
+        logger.info("Save list");
 
         super.onDestroy();
     }
@@ -155,7 +163,7 @@ public class StatService extends Service implements Constant {
 
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, alarmTime, REPEAT_TIME, pending);
 
-        logger.info("startAlarm");
+        logger.info("Start alarm");
     }
 
     private void stopAlarm(Context context) {
@@ -165,7 +173,7 @@ public class StatService extends Service implements Constant {
         PendingIntent pending = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         am.cancel(pending);
 
-        logger.info("stopAlarm");
+        logger.info("Stop alarm");
     }
 
     private void updateAppList(List<String> toUpdate) {
@@ -175,19 +183,13 @@ public class StatService extends Service implements Constant {
             PInfo info = findInfoByPackage(statHandler.getApps(), p);
 
             if (info != null) {
-                Func.saveTime(info);
+                //Func.saveTime(info);
 
                 info.setChecked(true);
-                info.setStartTime(System.currentTimeMillis());
+                //info.setStartTime(System.currentTimeMillis());
 
-                logger.info("updateAppList: checked<" + p + ">");
+                logger.info("--- updateAppList: checked<" + p + ">");
             }
-        }
-    }
-
-    private void closeAppList(List<PInfo> list) {
-        for (PInfo info : list) {
-            Func.saveTime(info);
         }
     }
 
@@ -218,6 +220,10 @@ public class StatService extends Service implements Constant {
     }
 
     private void mergeInfo(List<PInfo> inMemory, List<PInfo> inDevice, boolean observeInstalled, boolean onStart) {
+        logger.info("Before merge");
+        logger.info("--- in memory size<" + inMemory.size() + ">");
+        logger.info("--- in device size<" + inDevice.size() + ">");
+
         List<PInfo> result = new ArrayList<PInfo>();
         boolean empty = inMemory.isEmpty();
 
@@ -227,7 +233,7 @@ public class StatService extends Service implements Constant {
 
                 if (dev == null) {
                     if (!onStart) {
-                        Func.saveTime(mem);
+                        Func.saveTime(mem, true);
                         mem.setStopMonitoring(true);
                         logger.info("mergeInfo: application was deleted - " + mem.getPackageName());
                     }
@@ -240,6 +246,7 @@ public class StatService extends Service implements Constant {
             PInfo mem = findInfoByPackage(inMemory, dev.getPackageName());
 
             if (mem == null) {
+                //Устанавливаемые приложения надо отслеживать через событие!!!!!
                 if (observeInstalled && !empty) {
                     dev.setChecked(true);
                     logger.info("mergeInfo: found new application - " + dev.getPackageName());
@@ -257,6 +264,10 @@ public class StatService extends Service implements Constant {
 
         inMemory.clear();
         inMemory.addAll(result);
+
+        logger.info("After merge");
+        logger.info("--- in memory size<" + inMemory.size() + ">");
+        logger.info("--- in device size<" + inDevice.size() + ">");
     }
 
     class AlarmReceiver extends BroadcastReceiver {
@@ -272,7 +283,7 @@ public class StatService extends Service implements Constant {
         }
     }
 
-    class SetupReceiver extends BroadcastReceiver {
+    class StatReceiver extends BroadcastReceiver {
         public static final String ACTION = "com.askokov.SETUP_RECEIVER";
 
         @Override
@@ -283,7 +294,7 @@ public class StatService extends Service implements Constant {
             logger.info("onReceive: requestCode<" + requestCode + ">");
 
             if (requestCode == REQUEST_GET_APP_LIST) {
-                logger.info("onReceive: execute<get app list>");
+                logger.info("onReceive: execute<get application list>");
 
                 ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
                 boolean observeInstalled = intent.getBooleanExtra(OBSERVE_INSTALLED, false);
@@ -292,10 +303,10 @@ public class StatService extends Service implements Constant {
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(RESULT, new PInfoParcel(statHandler.getApps()));
-                resultReceiver.send(STATUS_FINISH, bundle);
+                resultReceiver.send(requestCode, bundle);
 
             } else if (requestCode == REQUEST_UPDATE_APP_LIST) {
-                logger.info("onReceive: execute<update app list>");
+                logger.info("onReceive: execute<update application list>");
 
                 ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
                 ListParcel parcel = (ListParcel) intent.getSerializableExtra(PARCEL);
@@ -304,16 +315,46 @@ public class StatService extends Service implements Constant {
 
                 Bundle bundle = new Bundle();
                 bundle.putString(RESULT, "Update success");
-                resultReceiver.send(STATUS_FINISH, bundle);
-            } else if (requestCode == REQUEST_GET_STAT_LIST) {
-                logger.info("onReceive: execute<get stat list>");
+                resultReceiver.send(requestCode, bundle);
+            } else if (requestCode == REQUEST_GET_STAT_FROM_MEMORY) {
+                logger.info("onReceive: execute<get statistic from memory>");
 
                 ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
 
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(RESULT, new PInfoParcel(statHandler.getApps()));
-                resultReceiver.send(STATUS_FINISH, bundle);
+                bundle.putSerializable(RESULT, new PInfoParcel(getActiveApps(statHandler.getApps())));
+                resultReceiver.send(requestCode, bundle);
+            } else if (requestCode == REQUEST_GET_STAT_FROM_DATABASE) {
+                logger.info("onReceive: execute<get statistic from database>");
+
+                ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
+
+                List<PInfo> fromDB = dbHelper.loadList(Func.truncateDate(new Date()));
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(RESULT, new PInfoParcel(fromDB));
+                resultReceiver.send(requestCode, bundle);
+            } else if (requestCode == REQUEST_SAVE_STAT_TO_DATABASE) {
+                logger.info("onReceive: execute<save statistic to database>");
+
+                ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
+
+                dbHelper.saveList(statHandler.getApps());
+                Bundle bundle = new Bundle();
+                bundle.putString(RESULT, "Save statistic success");
+                resultReceiver.send(requestCode, bundle);
             }
+        }
+
+        private List<PInfo> getActiveApps(List<PInfo> list) {
+            List<PInfo> result = new ArrayList<PInfo>();
+
+            for(PInfo info : list) {
+                if (info.getFullTime() > 0) {
+                    result.add(info);
+                }
+            }
+
+            return result;
         }
     }
 
