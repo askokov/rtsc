@@ -9,7 +9,6 @@ public class PInfo implements Serializable {
     private String packageName = "";
     private String versionName = "";
     private boolean checked;
-    private boolean stopMonitoring;
     private Date date;
     private long fullTime;
     private long startTime;
@@ -58,14 +57,6 @@ public class PInfo implements Serializable {
         this.checked = checked;
     }
 
-    public boolean isStopMonitoring() {
-        return stopMonitoring;
-    }
-
-    public void setStopMonitoring(final boolean stopMonitoring) {
-        this.stopMonitoring = stopMonitoring;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -88,5 +79,20 @@ public class PInfo implements Serializable {
 
     public void setStartTime(final long startTime) {
         this.startTime = startTime;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final PInfo info = (PInfo) o;
+
+        return packageName.equals(info.packageName);
+    }
+
+    @Override
+    public int hashCode() {
+        return packageName.hashCode();
     }
 }

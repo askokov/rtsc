@@ -78,44 +78,14 @@
             android:paddingBottom="2dp">
 
             <Button
-                android:id="@+id/btnStatFromMemory"
+                android:id="@+id/btnStatFromService"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/txtStatFromMemory"
+                android:text="@string/txtStatFromService"
                 android:background="@drawable/button_shape"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp" android:paddingTop="10dp" android:paddingBottom="10dp"
                 >
-            </Button>
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:paddingTop="2dp" android:paddingBottom="2dp">
-
-            <Button
-                android:id="@+id/btnStatFromDatabase"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/txtStatFromDatabase"
-                android:paddingTop="10dp" android:paddingBottom="10dp"
-                android:background="@drawable/button_shape" android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
-            </Button>
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:paddingTop="2dp" android:paddingBottom="2dp">
-
-            <Button
-                android:id="@+id/btnSaveStatToDatabase"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/txtSaveStatToDatabase"
-                android:background="@drawable/button_shape" android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_marginLeft="5dp" android:layout_marginRight="5dp">
             </Button>
         </TableRow>
     </TableLayout>

@@ -2,10 +2,14 @@ package com.askokov.rtsc.common;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import android.content.Context;
 import android.content.Intent;
@@ -168,16 +172,16 @@ public class Func {
     }
 
     public static void saveTime(PInfo info) {
-        saveTime(info, false);
+        //Сохранить время
+        info.setFullTime(info.getFullTime() + (System.currentTimeMillis() - info.getStartTime()));
+        info.setStartTime(System.currentTimeMillis());
+
+        logger.info("Func: saveTime for info - " + info.prettyPrint());
     }
 
-    public static void saveTime(PInfo info, boolean force) {
-        if (info.isChecked() && (!info.isStopMonitoring() || force)) {
-            //Сохранить время
-            info.setFullTime(info.getFullTime() + (System.currentTimeMillis() - info.getStartTime()));
-            info.setStartTime(System.currentTimeMillis());
-
-            logger.info("Func: saveTime for info - " + info.prettyPrint());
+    public static void saveTime(Collection<PInfo> infos) {
+        for (PInfo info : infos) {
+            saveTime(info);
         }
     }
 
@@ -201,4 +205,73 @@ public class Func {
 
         return configuration;
     }
+
+    public static List<PInfo> merge(StatHandler handler, List<PInfo> input, boolean selected) {
+        Set<PInfo> mergedSet = new TreeSet<PInfo>();
+        Set<PInfo> memorySet = new HashSet<PInfo>(handler.getApps());
+        Set<PInfo> inputSet = new HashSet<PInfo>(input);
+
+        if (memorySet.isEmpty()) {
+            mergedSet.addAll(input);
+        } else {
+
+            for (PInfo mem : memorySet) {
+                if (input.contains(mem)) {
+                    mergedSet.add(mem);
+                } else {
+                    handler.setFlush(true);
+                    logger.info("merge: application<" + mem.getPackageName() + "> was deleted");
+                }
+            }
+
+            for (PInfo in : inputSet) {
+                if (!memorySet.contains(in)) {
+                    in.setStartTime(System.currentTimeMillis());
+                    mergedSet.add(in);
+
+                    if (selected) {
+                        handler.setFlush(true);
+                    }
+                }
+            }
+        }
+
+        initInfo(mergedSet);
+
+        return new ArrayList<PInfo>(mergedSet);
+    }
+
+    public static void initInfo(Collection<PInfo> infos) {
+        //Выставить всем текущую дату
+        Date date = Func.truncateDate(new Date());
+
+        for (PInfo info : infos) {
+            info.setChecked(true);
+            info.setDate(date);
+        }
+    }
+
+    public static void mergeIdentifiers(List<PInfo> memoryList, List<PInfo> dbList) {
+        for (PInfo db : dbList) {
+            PInfo mem = findByPackage(memoryList, db.getPackageName());
+
+            if (mem != null) {
+                mem.setId(db.getId());
+            }
+        }
+    }
+
+    public static PInfo findByPackage(List<PInfo> list, String pName) {
+        PInfo result = null;
+        for (PInfo info : list) {
+            if (pName.equals(info.getPackageName())) {
+                result = info;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+
 }

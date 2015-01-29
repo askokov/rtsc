@@ -1,6 +1,5 @@
 package com.askokov.rtsc.boot;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -14,7 +13,6 @@ import android.widget.ListView;
 import com.askokov.rtsc.R;
 import com.askokov.rtsc.common.Constant;
 import com.askokov.rtsc.common.PInfo;
-import com.askokov.rtsc.parcel.ListParcel;
 import com.askokov.rtsc.parcel.PInfoParcel;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
@@ -42,11 +40,9 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
         Button btnClear = (Button) findViewById(R.id.btnClear);
         btnClear.setOnClickListener(this);
 
-        Intent intent = getIntent();
-        boolean observeInstalled = intent.getBooleanExtra(OBSERVE_INSTALLED, false);
-        logger.info("onCreate: observeInstalled is " + observeInstalled);
+        //Intent intent = getIntent();
 
-        getAppListRequest(observeInstalled);
+        getAppListRequest();
     }
 
     @Override
@@ -84,22 +80,21 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
         super.onDestroy();
     }
 
-    private void getAppListRequest(boolean observeInstalled) {
+    private void getAppListRequest() {
         Intent intent = new Intent(StatService.StatReceiver.ACTION);
-        intent.putExtra(EXECUTE, REQUEST_GET_APP_LIST);
+        intent.putExtra(EXECUTE, GET_APP_LIST_FROM_SYSTEM);
         intent.putExtra(RECEIVER, getListReceiver);
-        intent.putExtra(OBSERVE_INSTALLED, observeInstalled);
 
         sendBroadcast(intent);
 
         logger.info("sendGetAppListRequest");
     }
 
-    private void sendUpdateAppListRequest(List<String> checked) {
+    private void sendUpdateAppListRequest(List<PInfo> box) {
         Intent intent = new Intent(StatService.StatReceiver.ACTION);
         intent.putExtra(RECEIVER, updateListReceiver);
-        intent.putExtra(EXECUTE, REQUEST_UPDATE_APP_LIST);
-        intent.putExtra(PARCEL, new ListParcel(checked));
+        intent.putExtra(EXECUTE, SAVE_APP_LIST_TO_SERVICE);
+        intent.putExtra(PARCEL, new PInfoParcel(box));
         sendBroadcast(intent);
 
         logger.info("sendUpdateAppListRequest");
@@ -111,18 +106,15 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
     }
 
     private void performSave() {
-        List<String> checked = new ArrayList<String>();
-
         List<PInfo> box = boxAdapter.getBox();
         // пишем в лог выделенные элементы
         logger.info("checked: ");
 
         for (PInfo info : box) {
             logger.info("---" + info.getPackageName());
-            checked.add(info.getPackageName());
         }
 
-        sendUpdateAppListRequest(checked);
+        sendUpdateAppListRequest(box);
     }
 
     class GetListResultReceiver extends ResultReceiver {
@@ -135,7 +127,7 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
             logger.info("onReceiveResult: resultCode<" + resultCode + ">");
 
-            if (resultCode == REQUEST_GET_APP_LIST) {
+            if (resultCode == GET_APP_LIST_FROM_SYSTEM) {
                 // создаем адаптер
                 PInfoParcel parcel = (PInfoParcel) resultData.getSerializable(RESULT);
                 boxAdapter = new BoxAdapter(AppsActivity.this, parcel.getList());
@@ -157,7 +149,7 @@ public class AppsActivity extends Activity implements Constant, View.OnClickList
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
             logger.info("onReceiveResult: resultCode<" + resultCode + ">");
 
-            if (resultCode == REQUEST_UPDATE_APP_LIST) {
+            if (resultCode == SAVE_APP_LIST_TO_SERVICE) {
                 String result = resultData.getString(RESULT);
                 logger.info("onReceiveResult: result<" + result + ">");
             }

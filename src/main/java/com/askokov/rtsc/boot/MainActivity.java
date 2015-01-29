@@ -68,14 +68,8 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         SharedPreferences pref = getPreferences(MODE_PRIVATE);
         configuration = Func.loadConfiguration(pref);
 
-        Button btnStatFromMemory = (Button) findViewById(R.id.btnStatFromMemory);
+        Button btnStatFromMemory = (Button) findViewById(R.id.btnStatFromService);
         btnStatFromMemory.setOnClickListener(this);
-
-        Button btnStatFromDatabase = (Button) findViewById(R.id.btnStatFromDatabase);
-        btnStatFromDatabase.setOnClickListener(this);
-
-        Button btnSaveStatToDatabase = (Button) findViewById(R.id.btnSaveStatToDatabase);
-        btnSaveStatToDatabase.setOnClickListener(this);
     }
 
     @Override
@@ -95,8 +89,8 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                     logger.info("onClick: service running...");
 
                     Intent intent = new Intent(this, AppsActivity.class);
-                    intent.putExtra(OBSERVE_INSTALLED, configuration.isAddInstalled());
-                    startActivityForResult(intent, REQUEST_GET_APP_LIST);
+                    //intent.putExtra(OBSERVE_INSTALLED, configuration.isAddInstalled());
+                    startActivityForResult(intent, GET_APP_LIST_FROM_SYSTEM);
                 } else {
                     logger.info("onClick: service stopped...");
                 }
@@ -108,7 +102,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
                 Intent intent = new Intent(this, AppsActivity.class);
                 intent.putExtra(CONFIGURATION, configuration);
-                startActivityForResult(intent, REQUEST_SAVE_CONFIGURATION);
+                startActivityForResult(intent, SAVE_CONFIGURATION);
 
                 break;
 
@@ -132,7 +126,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                     logger.info("onCreate: stop service");
                 } else {
                     Intent serviceIntent = new Intent(this, StatService.class);
-                    serviceIntent.putExtra(OBSERVE_INSTALLED, configuration.isAddInstalled());
+                    //serviceIntent.putExtra(OBSERVE_INSTALLED, configuration.isAddInstalled());
                     startService(serviceIntent);
                     serviceRunning = true;
                     btnAppList.setEnabled(true);
@@ -144,18 +138,8 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
                 break;
 
-            case R.id.btnStatFromMemory:
+            case R.id.btnStatFromService:
                 statMemoryRequest();
-
-                break;
-
-            case R.id.btnStatFromDatabase:
-                statDatabaseRequest();
-
-                break;
-
-            case R.id.btnSaveStatToDatabase:
-                saveStatRequest();
 
                 break;
 
@@ -169,8 +153,8 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         // если пришло ОК
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQUEST_GET_APP_LIST:
-                    boolean observeInstalled = data.getBooleanExtra(OBSERVE_INSTALLED, false);
+                case GET_APP_LIST_FROM_SYSTEM:
+
 
                     break;
             }
@@ -202,37 +186,14 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         StatReportReceiver receiver = new StatReportReceiver(null, this);
 
         Intent intent = new Intent(StatService.StatReceiver.ACTION);
-        intent.putExtra(EXECUTE, REQUEST_GET_STAT_FROM_MEMORY);
+        intent.putExtra(EXECUTE, GET_APP_LIST_FROM_SERVICE);
         intent.putExtra(RECEIVER, receiver);
 
         sendBroadcast(intent);
         logger.info("Statistic from memory request finish");
     }
 
-    private void statDatabaseRequest() {
-        logger.info("Statistic from database request start");
-        StatReportReceiver receiver = new StatReportReceiver(null, this);
-
-        Intent intent = new Intent(StatService.StatReceiver.ACTION);
-        intent.putExtra(EXECUTE, REQUEST_GET_STAT_FROM_DATABASE);
-        intent.putExtra(RECEIVER, receiver);
-
-        sendBroadcast(intent);
-        logger.info("Statistic from database request finish");
-    }
-
-    private void saveStatRequest() {
-        logger.info("Save statistic request start");
-        StatReportReceiver receiver = new StatReportReceiver(null, this);
-
-        Intent intent = new Intent(StatService.StatReceiver.ACTION);
-        intent.putExtra(EXECUTE, REQUEST_SAVE_STAT_TO_DATABASE);
-        intent.putExtra(RECEIVER, receiver);
-
-        sendBroadcast(intent);
-        logger.info("Save statistic request finish");
-    }
-
+    /*
     public void showInfo(int idx) {
 
         final Dialog infoDialog = new Dialog(this);
@@ -241,12 +202,6 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         infoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = getLayoutInflater().inflate(R.layout.info, null);
         infoDialog.setContentView(view);
-
-        /*
-        final TextView text = (TextView) view.findViewById(R.id.txtInfo);
-        String[] infoArray = getResources().getStringArray(R.array.infoArray);
-        text.setText(infoArray[idx]);
-        */
 
         Button btnClose = (Button) view.findViewById(R.id.btnClose);
         btnClose.setOnClickListener(new View.OnClickListener() {
@@ -258,6 +213,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
         infoDialog.show();
     }
+    */
 
     class StatReportReceiver extends ResultReceiver {
         private Context context;
@@ -271,22 +227,12 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
             logger.info("StatReportReceiver.onReceiveResult: resultCode<" + resultCode + ">");
 
-            if (resultCode == REQUEST_GET_STAT_FROM_MEMORY) {
-                logger.info("StatReportReceiver: get statistic from memory");
+            if (resultCode == GET_APP_LIST_FROM_SERVICE) {
+                logger.info("StatReportReceiver: get statistic from service");
 
                 PInfoParcel parcel = (PInfoParcel) resultData.getSerializable(RESULT);
                 sendReportToEmail(parcel);
 
-            } else if (resultCode == REQUEST_GET_STAT_FROM_DATABASE) {
-                logger.info("StatReportReceiver: get statistic from database");
-
-                PInfoParcel parcel = (PInfoParcel) resultData.getSerializable(RESULT);
-                sendReportToEmail(parcel);
-
-            } else if (resultCode == REQUEST_SAVE_STAT_TO_DATABASE) {
-                String result = resultData.getString(RESULT);
-
-                logger.info("StatReportReceiver: save statistic to database --> " + result);
             }
 
             logger.info("StatReportReceiver.onReceiveResult: finish");

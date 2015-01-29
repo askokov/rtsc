@@ -97,21 +97,4 @@ public class ReportActivity extends Activity implements Constant, View.OnClickLi
 
     private void performSendReport() {
     }
-
-    class SaveConfigurationResultReceiver extends ResultReceiver {
-
-        public SaveConfigurationResultReceiver(final Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-            logger.info("onReceiveResult: resultCode<" + resultCode + ">");
-
-            if (resultCode == REQUEST_SAVE_CONFIGURATION) {
-                String result = resultData.getString(RESULT);
-                logger.info("onReceiveResult: result<" + result + ">");
-            }
-        }
-    }
 }

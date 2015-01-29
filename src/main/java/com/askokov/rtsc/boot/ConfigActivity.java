@@ -44,13 +44,6 @@ public class ConfigActivity extends Activity implements Constant, View.OnClickLi
         groupMail = (RadioGroup) findViewById(R.id.groupMail);
         groupMail.check(configuration.getMailType().ordinal());
 
-        groupReport = (RadioGroup) findViewById(R.id.groupReport);
-        groupReport.check(configuration.getReportType().ordinal());
-        groupReport.setOnCheckedChangeListener(this);
-
-        editDate = (EditText) findViewById(R.id.editDate);
-        editDate.setEnabled(false);
-
         Button btnSaveConfig = (Button) findViewById(R.id.btnSaveConfig);
         btnSaveConfig.setOnClickListener(this);
     }
@@ -106,7 +99,7 @@ public class ConfigActivity extends Activity implements Constant, View.OnClickLi
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
             logger.info("onReceiveResult: resultCode<" + resultCode + ">");
 
-            if (resultCode == REQUEST_SAVE_CONFIGURATION) {
+            if (resultCode == SAVE_CONFIGURATION) {
                 String result = resultData.getString(RESULT);
                 logger.info("onReceiveResult: result<" + result + ">");
             }

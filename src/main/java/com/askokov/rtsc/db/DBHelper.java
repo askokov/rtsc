@@ -120,7 +120,6 @@ public File getAlbumStorageDir(String albumName) {
                         PInfo info = new PInfo();
 
                         info.setChecked(true);
-                        info.setStopMonitoring(false);
 
                         int id = c.getInt(c.getColumnIndex("_id"));
                         info.setId(id);

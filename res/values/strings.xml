@@ -13,21 +13,7 @@
     <string name="txtServiceStop">Stop service</string>
     <string name="txtAddInstalled">Add installed</string>
 
-    <!--string name="txtInfoHeader">Info Header</string>
-
-    <string-array name="infoArray">
-        <item>Info 1</item>
-        <item>Info 2</item>
-        <item>Info 3</item>
-    </string-array>
-
-    <string name="txtInfo1">Info 1</string>
-    <string name="txtInfo2">Info 2</string>
-    <string name="txtInfo3">Info 3</string-->
-
-    <string name="txtStatFromMemory">Statistic from memory</string>
-    <string name="txtStatFromDatabase">Statistic from database</string>
-    <string name="txtSaveStatToDatabase">Save statistic to database</string>
+    <string name="txtStatFromService">Statistic from service</string>
     <string name="txtConfig">Configuration</string>
 
     <string name="txtMailByClient">Send e-mail by Android client</string>

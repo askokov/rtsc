@@ -6,6 +6,7 @@ import java.util.List;
 
 public class StatHandler {
     private Date current;
+    private boolean flush;
     private List<PInfo> apps = new ArrayList<PInfo>();
 
     public StatHandler(final List<PInfo> apps) {
@@ -39,5 +40,13 @@ public class StatHandler {
 
     public Date getCurrent() {
         return current;
+    }
+
+    public boolean isFlush() {
+        return flush;
+    }
+
+    public void setFlush(final boolean flush) {
+        this.flush = flush;
     }
 }

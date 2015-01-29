@@ -114,52 +114,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <RadioGroup
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:divider="@android:color/darker_gray"
-                android:background="@drawable/custom_divider"
-                android:id="@+id/groupReport"
-                android:showDividers="middle">
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/txtReportNow"
-                    android:id="@+id/radioReportNow"
-                    android:checked="true" android:layout_marginRight="10dp" android:layout_marginLeft="10dp"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/txtReportDate"
-                    android:id="@+id/radioReportDate" android:layout_marginLeft="10dp" android:layout_marginRight="10dp"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/txtReportAll"
-                    android:id="@+id/radioReportAll" android:layout_marginLeft="10dp" android:layout_marginRight="10dp"/>
-            </RadioGroup>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:paddingBottom="2dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="2dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/line_horizontal"/>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
             <Button
                 android:id="@+id/btnSaveConfig"
                 android:layout_width="fill_parent"
