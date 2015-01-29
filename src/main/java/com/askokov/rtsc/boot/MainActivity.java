@@ -2,7 +2,6 @@ package com.askokov.rtsc.boot;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,9 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.TextView;
 import com.askokov.rtsc.R;
 import com.askokov.rtsc.common.Configuration;
 import com.askokov.rtsc.common.Constant;
@@ -30,7 +27,6 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
     private Button btnService;
     private Button btnAppList;
-    private TextView txtService;
     private boolean serviceRunning;
     private Configuration configuration;
 
@@ -100,7 +96,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
             case R.id.btnConfiguration:
                 logger.info("onClick: btnConfiguration");
 
-                Intent intent = new Intent(this, AppsActivity.class);
+                Intent intent = new Intent(this, ConfigActivity.class);
                 intent.putExtra(CONFIGURATION, configuration);
                 startActivityForResult(intent, SAVE_CONFIGURATION);
 
@@ -139,7 +135,15 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                 break;
 
             case R.id.btnStatFromService:
-                statMemoryRequest();
+                logger.info("Statistic from service request start");
+                StatReportReceiver receiver = new StatReportReceiver(null, this);
+
+                Intent statIntent = new Intent(StatService.StatReceiver.ACTION);
+                statIntent.putExtra(EXECUTE, GET_APP_LIST_FROM_SERVICE);
+                statIntent.putExtra(RECEIVER, receiver);
+
+                sendBroadcast(statIntent);
+                logger.info("Statistic from service request finish");
 
                 break;
 
@@ -179,18 +183,6 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
             }
         }
         return false;
-    }
-
-    private void statMemoryRequest() {
-        logger.info("Statistic from memory request start");
-        StatReportReceiver receiver = new StatReportReceiver(null, this);
-
-        Intent intent = new Intent(StatService.StatReceiver.ACTION);
-        intent.putExtra(EXECUTE, GET_APP_LIST_FROM_SERVICE);
-        intent.putExtra(RECEIVER, receiver);
-
-        sendBroadcast(intent);
-        logger.info("Statistic from memory request finish");
     }
 
     /*
@@ -249,6 +241,8 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
 
                 if (file != null) {
                     SenderMailAsync mailAsync = new SenderMailAsync(context, "Statistic report", "See attachment", file);
+                    mailAsync.setUser(configuration.getMailUser());
+                    mailAsync.setPassword(configuration.getMailPassword());
                     mailAsync.execute();
 
                     logger.info("StatReportReceiver: PDF file was sent to email");

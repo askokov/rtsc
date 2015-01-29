@@ -9,8 +9,8 @@ import com.google.code.microlog4android.LoggerFactory;
 public class SenderMailAsync extends AsyncTask<Object, String, Boolean> {
     private static final Logger logger = LoggerFactory.getLogger(SenderMailAsync.class);
 
-    private static final String SENDER = "camera@receiver.com";
-    private static final String RECIPIENT = "skokov@inbox.ru";
+    private static final String SENDER = "sender@rtsc.com";
+    private static final String RECIPIENT = "recipient@rtsc.com";
     private static final String USER = "aliaksei.skokau@gmail.com";
     private static final String PASSWORD = "$qwertyu_1";
 
@@ -18,14 +18,23 @@ public class SenderMailAsync extends AsyncTask<Object, String, Boolean> {
     private String subject;
     private String body;
     private String filename;
+    private String user = USER;
+    private String password = PASSWORD;
 
-    public SenderMailAsync(final Context context, final String subject, final String body, final String filename) {
+    public SenderMailAsync(Context context, String subject, String body, String filename) {
         this.context = context;
         this.subject = subject;
         this.body = body;
         this.filename = filename;
     }
 
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     protected void onPostExecute(Boolean result) {
@@ -37,7 +46,7 @@ public class SenderMailAsync extends AsyncTask<Object, String, Boolean> {
     protected Boolean doInBackground(Object... params) {
 
         try {
-            MailSenderClass mailSender = new MailSenderClass(USER, PASSWORD);
+            MailSender mailSender = new MailSender(USER, PASSWORD);
 
             mailSender.sendMail(subject, body, SENDER, RECIPIENT, filename);
         } catch (Exception e) {

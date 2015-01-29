@@ -29,4 +29,8 @@
     <string name="txtSendReport">Выслать отчет по почте</string>
     <string name="txtBack">Назад</string>
 
+    <string name="txtUser">Имя</string>
+    <string name="txtPassword">Пароль</string>
+    <string name="txtDate">Дата</string>
+
 </resources>

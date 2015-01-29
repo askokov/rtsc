@@ -20,8 +20,8 @@ import javax.mail.internet.MimeMultipart;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
-public class MailSenderClass extends javax.mail.Authenticator {
-    private static final Logger logger = LoggerFactory.getLogger(MailSenderClass.class);
+public class MailSender extends javax.mail.Authenticator {
+    private static final Logger logger = LoggerFactory.getLogger(MailSender.class);
 
     public static String MAIL_HOST = "smtp.gmail.com";
 
@@ -29,17 +29,17 @@ public class MailSenderClass extends javax.mail.Authenticator {
     private String password;
     private Session session;
 
-    private Multipart _multipart;
+    private Multipart multipart;
 
     static {
         Security.addProvider(new JSSEProvider());
     }
 
-    public MailSenderClass(String user, String password) {
+    public MailSender(String user, String password) {
         this.user = user;
         this.password = password;
 
-        _multipart = new MimeMultipart();
+        multipart = new MimeMultipart();
 
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");
@@ -72,7 +72,7 @@ public class MailSenderClass extends javax.mail.Authenticator {
 
             BodyPart messageBodyPart = new MimeBodyPart();
             messageBodyPart.setText(body);
-            _multipart.addBodyPart(messageBodyPart);
+            multipart.addBodyPart(messageBodyPart);
 
             if (!filename.equalsIgnoreCase("")) {
                 BodyPart attachBodyPart = new MimeBodyPart();
@@ -80,10 +80,10 @@ public class MailSenderClass extends javax.mail.Authenticator {
                 attachBodyPart.setDataHandler(new DataHandler(source));
                 attachBodyPart.setFileName(filename);
 
-                _multipart.addBodyPart(attachBodyPart);
+                multipart.addBodyPart(attachBodyPart);
             }
 
-            message.setContent(_multipart);
+            message.setContent(multipart);
 
             Transport.send(message);
         } catch (Exception e) {

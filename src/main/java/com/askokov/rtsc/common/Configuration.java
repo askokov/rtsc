@@ -6,6 +6,8 @@ public class Configuration implements Serializable {
     private boolean addInstalled;
     private ReportType reportType;
     private MailType mailType;
+    private String mailUser;
+    private String mailPassword;
 
     public boolean isAddInstalled() {
         return addInstalled;
@@ -29,5 +31,21 @@ public class Configuration implements Serializable {
 
     public void setReportType(final ReportType reportType) {
         this.reportType = reportType;
+    }
+
+    public String getMailPassword() {
+        return mailPassword;
+    }
+
+    public void setMailPassword(final String mailPassword) {
+        this.mailPassword = mailPassword;
+    }
+
+    public String getMailUser() {
+        return mailUser;
+    }
+
+    public void setMailUser(final String mailUser) {
+        this.mailUser = mailUser;
     }
 }

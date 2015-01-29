@@ -27,4 +27,8 @@
     <string name="txtSendReport">Send report to e-mail</string>
     <string name="txtBack">Back</string>
 
+    <string name="txtUser">User</string>
+    <string name="txtPassword">Password</string>
+    <string name="txtDate">Date</string>
+
 </resources>
