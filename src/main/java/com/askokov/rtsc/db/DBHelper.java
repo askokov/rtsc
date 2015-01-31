@@ -9,7 +9,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.askokov.rtsc.common.Configuration;
+import com.askokov.rtsc.common.Func;
+import com.askokov.rtsc.common.MailType;
 import com.askokov.rtsc.common.PInfo;
+import com.askokov.rtsc.common.ReportType;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
@@ -17,32 +21,27 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final Logger logger = LoggerFactory.getLogger(DBHelper.class);
 
     private static final int DB_VERSION = 1;          // версия БД
-    private Context context;
 
     public DBHelper(Context context, String dbPath) {
         super(context, dbPath, null, DB_VERSION);
-        this.context = context;
-
-
-        /*
-public File getAlbumStorageDir(String albumName) {
-    // Get the directory for the user's public pictures directory.
-    File file = new File(Environment.getExternalStoragePublicDirectory(
-            Environment.DIRECTORY_PICTURES), albumName);
-    if (!file.mkdirs()) {
-        Log.e(LOG_TAG, "Directory not created");
-    }
-    return file;
-}
-         */
     }
 
     public void onCreate(SQLiteDatabase db) {
         logger.info("onCreate database");
 
-        // создаем таблицу должностей
-        db.execSQL("CREATE TABLE STAT (" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT NOT NULL, package_name TEXT NOT NULL, version_name TEXT NOT NULL, date INTEGER NOT NULL, full_time INTEGER NOT NULL)");
-        logger.info("Table created");
+        db.beginTransaction();
+        try {
+            db.execSQL("CREATE TABLE STAT (" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT NOT NULL, package_name TEXT NOT NULL, version_name TEXT NOT NULL, date INTEGER NOT NULL, full_time INTEGER NOT NULL)");
+            logger.info("Table <STAT> created");
+
+            db.execSQL("CREATE TABLE CONF (" + "add_installed INTEGER NOT NULL, report_type TEXT NOT NULL, mail_type TEXT NOT NULL, mail_user TEXT, mail_password TEXT)");
+            db.execSQL("INSERT INTO CONF (add_installed, report_type, mail_type) VALUES(0,'ALL','CLIENT')");
+            logger.info("Table <CONF> created");
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -106,10 +105,12 @@ public File getAlbumStorageDir(String albumName) {
     }
 
 
-    public List<PInfo> loadList(Date date) {
+    public List<PInfo> loadApps(Date date) {
         List<PInfo> result = new ArrayList<PInfo>();
+        long dateParam = Func.truncateDate(date).getTime();
+
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("select * from STAT", null);
+        Cursor c = db.rawQuery("select * from STAT where date=" + dateParam, null);
 
         if (c != null) {
             if (c.getCount() > 0) {
@@ -147,28 +148,44 @@ public File getAlbumStorageDir(String albumName) {
         return result;
     }
 
-    private String generateInClause(int count) {
-        String result = "(";
+    public Configuration loadConfiguration() {
+        Configuration configuration = new Configuration();
 
-        for(int i = 0; i < count; i++) {
-            result += "?,";
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("select * from CONF", null);
+
+        if (c != null) {
+            if (c.getCount() > 0) {
+                if (c.moveToFirst()) {
+                    int addInstalled = c.getInt(c.getColumnIndex("add_installed"));
+                    configuration.setAddInstalled(addInstalled == 1);
+
+                    String type = c.getString(c.getColumnIndex("report_type"));
+                    configuration.setReportType(ReportType.valueOf(type));
+
+                    type = c.getString(c.getColumnIndex("mail_type"));
+                    configuration.setMailType(MailType.valueOf(type));
+
+                    configuration.setMailUser(c.getString(c.getColumnIndex("mail_user")));
+                    configuration.setMailPassword(c.getString(c.getColumnIndex("mail_password")));
+                }
+            }
+            c.close();
+        } else {
+            logger.info("Cursor is null");
         }
 
-        result = result.substring(0, result.length());
-        result += ")";
+        db.close();
+        logger.info("Configuration loaded");
 
-        return result;
+        return configuration;
     }
 
-
-    public void saveList(List<PInfo> list) {
+    public void saveApps(List<PInfo> list) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues cv = new ContentValues();
 
-        //database.execSQL("CREATE TABLE STAT (" + "_id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT NOT NULL,
-        // package_name TEXT NOT NULL, version_name TEXT NOT NULL, date INTEGER NULL, full_time INTEGER NOT NULL)");
-        // заполняем ее
         int count = 0;
         for (PInfo info : list) {
             if (info.getFullTime() > 0) {
@@ -191,6 +208,23 @@ public File getAlbumStorageDir(String albumName) {
 
         db.close();
         logger.info("List saved: size<" + count + ">");
+    }
+
+    public void saveConfiguration(Configuration configuration) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+
+        cv.put("add_installed", configuration.isAddInstalled() ? 1 : 0);
+        cv.put("report_type", configuration.getReportType().name());
+        cv.put("mail_type", configuration.getMailType().name());
+        cv.put("mail_user", configuration.getMailUser());
+        cv.put("mail_password", configuration.getMailPassword());
+
+        db.update("CONF", cv, null, null);
+
+        db.close();
+        logger.info("Configuration saved");
     }
 
     public void createDataBase() {

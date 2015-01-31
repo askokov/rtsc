@@ -23,10 +23,11 @@ public class ConfigActivity extends Activity implements Constant, View.OnClickLi
 
     private CheckBox cbAddInstalled;
     private RadioGroup groupMail;
-    private RadioGroup groupReport;
-    private EditText editDate;
+    private EditText editUser;
+    private EditText editPassword;
 
-    private Configuration configuration;
+    private GetConfigurationResultReceiver getConfigurationReceiver;
+    private SaveConfigurationResultReceiver saveConfigurationReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +36,24 @@ public class ConfigActivity extends Activity implements Constant, View.OnClickLi
 
         setContentView(R.layout.config);
 
-        Intent intent = getIntent();
-        configuration = (Configuration) intent.getSerializableExtra(CONFIGURATION);
-
         cbAddInstalled = (CheckBox) findViewById(R.id.cbAddInstalled);
-        cbAddInstalled.setChecked(configuration.isAddInstalled());
 
         groupMail = (RadioGroup) findViewById(R.id.groupMail);
-        groupMail.check(configuration.getMailType().ordinal());
+        groupMail.setOnCheckedChangeListener(this);
+
+        editUser = (EditText) findViewById(R.id.editUser);
+        editPassword = (EditText) findViewById(R.id.editPassword);
 
         Button btnSaveConfig = (Button) findViewById(R.id.btnSaveConfig);
         btnSaveConfig.setOnClickListener(this);
+
+        getConfigurationReceiver = new GetConfigurationResultReceiver(null);
+
+        Intent configIntent = new Intent(StatService.StatReceiver.ACTION);
+        configIntent.putExtra(EXECUTE, GET_CONFIGURATION);
+        configIntent.putExtra(RECEIVER, getConfigurationReceiver);
+
+        sendBroadcast(configIntent);
     }
 
     @Override
@@ -74,7 +82,13 @@ public class ConfigActivity extends Activity implements Constant, View.OnClickLi
     public void onCheckedChanged(final RadioGroup group, final int checkedId) {
         // checkedId is the RadioButton selected
         RadioButton rb = (RadioButton) findViewById(checkedId);
-        editDate.setEnabled(rb.getId() == R.id.radioReportDate);
+        if (rb.getId() == R.id.radioMailGmail) {
+            editUser.setEnabled(true);
+            editPassword.setEnabled(true);
+        } else {
+            editUser.setEnabled(false);
+            editPassword.setEnabled(false);
+        }
 
         logger.info("onCheckedChanged: Select radio<" + rb.getId() + ", " + rb.getText() + ">");
     }
@@ -87,6 +101,37 @@ public class ConfigActivity extends Activity implements Constant, View.OnClickLi
     }
 
     private void performSaveConfiguration() {
+        saveConfigurationReceiver = new SaveConfigurationResultReceiver(null);
+
+        Intent configIntent = new Intent(StatService.StatReceiver.ACTION);
+        configIntent.putExtra(EXECUTE, SAVE_CONFIGURATION);
+        configIntent.putExtra(RECEIVER, saveConfigurationReceiver);
+
+        sendBroadcast(configIntent);
+    }
+
+    class GetConfigurationResultReceiver extends ResultReceiver {
+
+        public GetConfigurationResultReceiver(final Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(final int resultCode, final Bundle resultData) {
+            logger.info("GetConfigurationResultReceiver.onReceiveResult: resultCode<" + resultCode + ">");
+
+            if (resultCode == GET_CONFIGURATION) {
+                Configuration configuration = (Configuration)resultData.getSerializable(RESULT);
+
+                cbAddInstalled.setChecked(configuration.isAddInstalled());
+
+                groupMail.check(configuration.getMailType().ordinal());
+
+                editUser.setText(configuration.getMailUser());
+                editPassword.setText(configuration.getMailPassword());
+                //editUser.setText("Google is your friend.", TextView.BufferType.EDITABLE);
+            }
+        }
     }
 
     class SaveConfigurationResultReceiver extends ResultReceiver {
@@ -97,7 +142,7 @@ public class ConfigActivity extends Activity implements Constant, View.OnClickLi
 
         @Override
         protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-            logger.info("onReceiveResult: resultCode<" + resultCode + ">");
+            logger.info("SaveConfigurationResultReceiver.onReceiveResult: resultCode<" + resultCode + ">");
 
             if (resultCode == SAVE_CONFIGURATION) {
                 String result = resultData.getString(RESULT);

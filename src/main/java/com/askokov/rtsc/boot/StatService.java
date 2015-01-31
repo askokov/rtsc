@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.ResultReceiver;
+import com.askokov.rtsc.common.Configuration;
 import com.askokov.rtsc.common.Constant;
 import com.askokov.rtsc.common.Func;
 import com.askokov.rtsc.common.PInfo;
@@ -27,11 +28,12 @@ import com.google.code.microlog4android.LoggerFactory;
 
 public class StatService extends Service implements Constant {
     private static final Logger logger = LoggerFactory.getLogger(StatService.class);
-    // restart service every 120 seconds
+    // restart service every 60 seconds
     private static final long REPEAT_TIME = 1000 * 60;
     private static final String DB_NAME = "/store.db"; // имя БД
 
     private StatHandler statHandler;
+    private Configuration configuration;
     private final Object sync = new Object();
 
     private StatReceiver statReceiver;
@@ -68,8 +70,10 @@ public class StatService extends Service implements Constant {
         dbHelper = new DBHelper(this, dbPath);
         //dbHelper.createDataBase();
 
-        List<PInfo> list = dbHelper.loadList(Func.truncateDate(new Date()));
+        List<PInfo> list = dbHelper.loadApps(Func.truncateDate(new Date()));
         statHandler = new StatHandler(list);
+
+        configuration = dbHelper.loadConfiguration();
 
         statReceiver = new StatReceiver();
         IntentFilter setupFilter = new IntentFilter();
@@ -81,7 +85,7 @@ public class StatService extends Service implements Constant {
         alarmFilter.addAction(AlarmReceiver.ACTION);
         registerReceiver(alarmReceiver, alarmFilter);
 
-        packageReceiver = new PackageReceiver(dbHelper, statHandler);
+        packageReceiver = new PackageReceiver(statHandler, configuration);
         IntentFilter packageFilter = new IntentFilter();
         packageFilter.setPriority(999);
 
@@ -123,7 +127,7 @@ public class StatService extends Service implements Constant {
 
         stopAlarm(this);
 
-        dbHelper.saveList(statHandler.getApps());
+        dbHelper.saveApps(statHandler.getApps());
         dbHelper = null;
         logger.info("Save list");
 
@@ -154,13 +158,6 @@ public class StatService extends Service implements Constant {
         logger.info("Stop alarm");
     }
 
-    private void clearAppList() {
-        for (PInfo info : statHandler.getApps()) {
-            Func.saveTime(info);
-            info.setChecked(false);
-        }
-    }
-
     class AlarmReceiver extends BroadcastReceiver {
         public static final String ACTION = "com.askokov.ALARM_RECEIVER";
 
@@ -177,30 +174,6 @@ public class StatService extends Service implements Constant {
     class StatReceiver extends BroadcastReceiver {
         public static final String ACTION = "com.askokov.SETUP_RECEIVER";
 
-        /*
-        Список приложений:
-        1. Получить полный список приложений из системы (с мержем списка в сервисе, если он установлен)
-        2. Получить список отслеживаемых приложений из данного сервиса
-        3. Получить сохраненный список отслеживаемых приложений из базы
-        4. Сохранить список отслеживаемых приложений в базе
-        5. Сохранить список отслеживаемых приложений в сервисе
-
-        Настройки:
-        1. Получить настройки из сервиса
-           - если настроек в сервисе нет, попробовать подгрузить их из базы и перед возвращением сохранить в сервисе
-           - если настроек в базе нет, вернуть пустые настройки, но в сервисе не сохранять
-        2. Сохранить настройки в сервисе, с одновременным сохранением в базе
-
-        int GET_APP_LIST_FROM_SYSTEM = 101;
-        int GET_APP_LIST_FROM_SERVICE = 102;
-        int GET_APP_LIST_FROM_DATABASE = 103;
-        int SAVE_APP_LIST_TO_SERVICE = 104;
-        int SAVE_APP_LIST_TO_DATABASE = 105;
-
-        int GET_CONFIGURATION = 201;
-        int SAVE_CONFIGURATION = 202;
-
-         */
         @Override
         public void onReceive(Context context, Intent intent) {
             Func.printIntent("SetupReceiver.onReceive", intent);
@@ -216,9 +189,9 @@ public class StatService extends Service implements Constant {
 
                 if (statHandler.isFlush()) {
                     Func.saveTime(statHandler.getApps());
-                    dbHelper.saveList(statHandler.getApps());
+                    dbHelper.saveApps(statHandler.getApps());
 
-                    List<PInfo> saved = dbHelper.loadList(new Date());
+                    List<PInfo> saved = dbHelper.loadApps(new Date());
                     Func.mergeIdentifiers(merged, saved);
                 }
 
@@ -236,7 +209,7 @@ public class StatService extends Service implements Constant {
             } else if (requestCode == GET_APP_LIST_FROM_DATABASE) {
                 ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
 
-                List<PInfo> saved = dbHelper.loadList(new Date());
+                List<PInfo> saved = dbHelper.loadApps(new Date());
                 statHandler = new StatHandler(saved);
 
                 Bundle bundle = new Bundle();
@@ -252,13 +225,13 @@ public class StatService extends Service implements Constant {
 
                 if (statHandler.isFlush()) {
                     Func.saveTime(statHandler.getApps());
-                    dbHelper.saveList(statHandler.getApps());
+                    dbHelper.saveApps(statHandler.getApps());
 
-                    List<PInfo> saved = dbHelper.loadList(new Date());
+                    List<PInfo> saved = dbHelper.loadApps(new Date());
                     Func.mergeIdentifiers(merged, saved);
                 }
 
-                statHandler = new StatHandler(merged);
+                statHandler.setApps(merged);
 
                 Bundle bundle = new Bundle();
                 bundle.putString(RESULT, "Success");
@@ -267,15 +240,39 @@ public class StatService extends Service implements Constant {
                 ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
 
                 Func.saveTime(statHandler.getApps());
-                dbHelper.saveList(statHandler.getApps());
+                dbHelper.saveApps(statHandler.getApps());
 
-                List<PInfo> saved = dbHelper.loadList(new Date());
+                List<PInfo> saved = dbHelper.loadApps(new Date());
                 statHandler = new StatHandler(saved);
 
                 Bundle bundle = new Bundle();
                 bundle.putString(RESULT, "Success");
                 resultReceiver.send(requestCode, bundle);
+            } else if (requestCode == SAVE_CONFIGURATION) {
+                ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
+
+                Configuration toSave = (Configuration) intent.getSerializableExtra(CONFIGURATION);
+                dbHelper.saveConfiguration(toSave);
+                mergeConfiguration(toSave, configuration);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(RESULT, "Success");
+                resultReceiver.send(requestCode, bundle);
+            } else if (requestCode == GET_CONFIGURATION) {
+                ResultReceiver resultReceiver = intent.getParcelableExtra(RECEIVER);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(RESULT, configuration);
+                resultReceiver.send(requestCode, bundle);
             }
         }
+    }
+
+    private void mergeConfiguration(Configuration from, Configuration to) {
+        to.setAddInstalled(from.isAddInstalled());
+        to.setMailType(from.getMailType());
+        to.setReportType(from.getReportType());
+        to.setMailUser(from.getMailUser());
+        to.setMailPassword(from.getMailPassword());
     }
 }

@@ -10,16 +10,21 @@ public class StatHandler {
     private List<PInfo> apps = new ArrayList<PInfo>();
 
     public StatHandler(final List<PInfo> apps) {
+        setApps(apps);
+    }
+
+    public List<PInfo> getApps() {
+        return apps;
+    }
+
+    public void setApps(final List<PInfo> apps) {
         this.apps = apps;
+
         setCurrent(new Date());
 
         for(PInfo info : apps) {
             info.setDate(current);
         }
-    }
-
-    public List<PInfo> getApps() {
-        return apps;
     }
 
     public boolean setCurrent(final Date date) {

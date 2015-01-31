@@ -26,10 +26,10 @@ public class RebootReceiver extends BroadcastReceiver {
 
         if (Intent.ACTION_REBOOT.equals(intent.getAction())) {
 
-            dbHelper.saveList(statHandler.getApps());
+            dbHelper.saveApps(statHandler.getApps());
         } else if (Intent.ACTION_SHUTDOWN.equals(intent.getAction())) {
 
-            dbHelper.saveList(statHandler.getApps());
+            dbHelper.saveApps(statHandler.getApps());
         }
     }
 }

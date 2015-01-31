@@ -3,8 +3,8 @@
 <TableLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" android:shrinkColumns="0" android:stretchColumns="1"
-    >
+    android:layout_height="wrap_content"
+    android:shrinkColumns="0" android:stretchColumns="1">
     <TableRow
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -27,24 +27,22 @@
 
             <Button
                 android:id="@+id/btnClear"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/delete_enabled" android:layout_gravity="center_vertical|right">
+                android:layout_gravity="center_vertical"
+                android:text="@string/txtClear"
+                android:background="@drawable/button_shape"
+                android:layout_marginTop="5dp" android:layout_marginBottom="5dp" android:padding="10dp">
             </Button>
-
-            <ImageView android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:background="@drawable/transparent24"
-                       android:clickable="false"/>
 
             <Button
                 android:id="@+id/btnSave"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/save_enabled" android:layout_gravity="center_vertical|right"
-                >
+                android:layout_gravity="center_vertical"
+                android:text="@string/txtSave"
+                android:background="@drawable/button_shape"
+                android:layout_marginTop="5dp" android:layout_marginBottom="5dp" android:padding="10dp">
             </Button>
         </LinearLayout>
     </TableRow>

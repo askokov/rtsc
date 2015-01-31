@@ -16,9 +16,11 @@
     <string name="txtStatFromService">Statistic from service</string>
     <string name="txtConfig">Configuration</string>
 
+
     <string name="txtMailByClient">Send e-mail by Android client</string>
     <string name="txtMailByGmail">Send e-mail by Gmail account</string>
 
+    <string name="txtReport">Report</string>
     <string name="txtReportNow">Report by current date</string>
     <string name="txtReportDate">Report by select date</string>
     <string name="txtReportAll">Report by all</string>
@@ -30,5 +32,8 @@
     <string name="txtUser">User</string>
     <string name="txtPassword">Password</string>
     <string name="txtDate">Date</string>
+
+    <string name="txtClear">Clear</string>
+    <string name="txtSave">Save</string>
 
 </resources>

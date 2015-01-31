@@ -4,20 +4,12 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.view.View;
 import android.widget.Button;
 import com.askokov.rtsc.R;
-import com.askokov.rtsc.common.Configuration;
 import com.askokov.rtsc.common.Constant;
-import com.askokov.rtsc.common.Func;
-import com.askokov.rtsc.common.ReportGenerator;
 import com.askokov.rtsc.log.LogConfigurator;
-import com.askokov.rtsc.mail.SenderMailAsync;
-import com.askokov.rtsc.parcel.PInfoParcel;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
@@ -28,7 +20,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
     private Button btnService;
     private Button btnAppList;
     private boolean serviceRunning;
-    private Configuration configuration;
+    //private Configuration configuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +53,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
             btnAppList.setEnabled(false);
         }
 
-        SharedPreferences pref = getPreferences(MODE_PRIVATE);
-        configuration = Func.loadConfiguration(pref);
+        //SharedPreferences pref = getPreferences(MODE_PRIVATE);
 
         Button btnStatFromMemory = (Button) findViewById(R.id.btnStatFromService);
         btnStatFromMemory.setOnClickListener(this);
@@ -85,7 +76,6 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                     logger.info("onClick: service running...");
 
                     Intent intent = new Intent(this, AppsActivity.class);
-                    //intent.putExtra(OBSERVE_INSTALLED, configuration.isAddInstalled());
                     startActivityForResult(intent, GET_APP_LIST_FROM_SYSTEM);
                 } else {
                     logger.info("onClick: service stopped...");
@@ -96,16 +86,16 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
             case R.id.btnConfiguration:
                 logger.info("onClick: btnConfiguration");
 
-                Intent intent = new Intent(this, ConfigActivity.class);
-                intent.putExtra(CONFIGURATION, configuration);
-                startActivityForResult(intent, SAVE_CONFIGURATION);
+                Intent configIntent = new Intent(this, ConfigActivity.class);
+                startActivityForResult(configIntent, GET_CONFIGURATION);
 
                 break;
 
             case R.id.btnGenerateReport:
                 logger.info("onClick: btnGenerateReport");
 
-                //statRequest();
+                Intent reportIntent = new Intent(this, ReportActivity.class);
+                startActivityForResult(reportIntent, GET_CONFIGURATION);
 
                 break;
             case R.id.btnService:
@@ -114,6 +104,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                 if (serviceRunning) {
                     Intent serviceIntent = new Intent(this, StatService.class);
                     stopService(serviceIntent);
+
                     serviceRunning = false;
                     btnAppList.setEnabled(false);
 
@@ -122,8 +113,8 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                     logger.info("onCreate: stop service");
                 } else {
                     Intent serviceIntent = new Intent(this, StatService.class);
-                    //serviceIntent.putExtra(OBSERVE_INSTALLED, configuration.isAddInstalled());
                     startService(serviceIntent);
+
                     serviceRunning = true;
                     btnAppList.setEnabled(true);
 
@@ -133,20 +124,6 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                 }
 
                 break;
-
-            case R.id.btnStatFromService:
-                logger.info("Statistic from service request start");
-                StatReportReceiver receiver = new StatReportReceiver(null, this);
-
-                Intent statIntent = new Intent(StatService.StatReceiver.ACTION);
-                statIntent.putExtra(EXECUTE, GET_APP_LIST_FROM_SERVICE);
-                statIntent.putExtra(RECEIVER, receiver);
-
-                sendBroadcast(statIntent);
-                logger.info("Statistic from service request finish");
-
-                break;
-
         }
     }
 
@@ -158,9 +135,13 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case GET_APP_LIST_FROM_SYSTEM:
-
-
+                    logger.info("onActivityResult: return from GET_APP_LIST_FROM_SYSTEM");
                     break;
+
+                case GET_CONFIGURATION:
+                    logger.info("onActivityResult: return from GET_CONFIGURATION");
+                    break;
+
             }
         }
     }
@@ -169,8 +150,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
     protected void onDestroy() {
         logger.info("onDestroy");
 
-        SharedPreferences pref = getPreferences(MODE_PRIVATE);
-        Func.saveConfiguration(pref, configuration);
+        //SharedPreferences pref = getPreferences(MODE_PRIVATE);
 
         super.onDestroy();
     }
@@ -206,50 +186,4 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
         infoDialog.show();
     }
     */
-
-    class StatReportReceiver extends ResultReceiver {
-        private Context context;
-
-        public StatReportReceiver(final Handler handler, final Context context) {
-            super(handler);
-            this.context = context;
-        }
-
-        @Override
-        protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-            logger.info("StatReportReceiver.onReceiveResult: resultCode<" + resultCode + ">");
-
-            if (resultCode == GET_APP_LIST_FROM_SERVICE) {
-                logger.info("StatReportReceiver: get statistic from service");
-
-                PInfoParcel parcel = (PInfoParcel) resultData.getSerializable(RESULT);
-                sendReportToEmail(parcel);
-
-            }
-
-            logger.info("StatReportReceiver.onReceiveResult: finish");
-        }
-
-        private void sendReportToEmail(PInfoParcel parcel) {
-            if (!parcel.getList().isEmpty()) {
-                String file = null;
-                try {
-                    file = new ReportGenerator().createPDF("report.pdf", context, parcel.getList());
-                } catch (Exception ex) {
-                    logger.info("StatReportReceiver: createPDF exception", ex);
-                }
-
-                if (file != null) {
-                    SenderMailAsync mailAsync = new SenderMailAsync(context, "Statistic report", "See attachment", file);
-                    mailAsync.setUser(configuration.getMailUser());
-                    mailAsync.setPassword(configuration.getMailPassword());
-                    mailAsync.execute();
-
-                    logger.info("StatReportReceiver: PDF file was sent to email");
-                }
-            } else {
-                logger.info("StatReportReceiver: Statistic missed");
-            }
-        }
-    }
 }

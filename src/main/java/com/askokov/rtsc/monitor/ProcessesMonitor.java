@@ -60,7 +60,7 @@ public class ProcessesMonitor {
     private void flushApps(StatHandler handler, DBHelper dbHelper) {
         logger.info("ProcessesMonitor: flush applications");
 
-        dbHelper.saveList(handler.getApps());
+        dbHelper.saveApps(handler.getApps());
 
         long startTime = System.currentTimeMillis();
         for (PInfo info : handler.getApps()) {

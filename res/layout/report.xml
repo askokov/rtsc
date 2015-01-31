@@ -18,7 +18,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/txtConfig"
+                android:text="@string/txtReport"
                 android:layout_gravity="center_horizontal"/>
         </TableRow>
 
@@ -46,7 +46,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:divider="@android:color/darker_gray"
-                android:background="@drawable/custom_divider"
+                android:background="@drawable/radiogroup_border"
                 android:id="@+id/groupReport"
                 android:showDividers="middle">
                 <RadioButton
@@ -135,10 +135,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/txtSendReport"
-                android:paddingTop="10dp" android:paddingBottom="10dp"
                 android:background="@drawable/button_shape"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
+                android:layout_marginRight="5dp" android:layout_marginTop="1dp" android:layout_marginBottom="1dp"
+                android:padding="10dp">
             </Button>
         </TableRow>
 
@@ -152,10 +152,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/txtBack"
-                android:paddingTop="10dp" android:paddingBottom="10dp"
                 android:background="@drawable/button_shape"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
+                android:layout_marginRight="5dp" android:layout_marginTop="1dp" android:layout_marginBottom="1dp"
+                android:padding="10dp">
             </Button>
         </TableRow>
 

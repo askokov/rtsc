@@ -76,7 +76,7 @@
                 android:layout_height="match_parent"
                 android:divider="@android:color/darker_gray"
                 android:id="@+id/groupMail"
-                android:background="@drawable/custom_divider" android:showDividers="middle">
+                android:background="@drawable/radiogroup_border" android:showDividers="middle">
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -130,7 +130,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:editable="true" android:id="@+id/editUser" android:layout_marginLeft="20dp"
+                android:editable="true"
+                android:id="@+id/editUser" android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp" android:inputType="text"/>
         </TableRow>
 
@@ -153,8 +154,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:editable="true" android:id="@+id/editPassword" android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp" android:enabled="true" android:inputType="textPassword"
+                android:editable="true"
+                android:id="@+id/editPassword" android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp" android:enabled="true"
+                android:inputType="textPassword"
                 android:password="true"/>
         </TableRow>
 

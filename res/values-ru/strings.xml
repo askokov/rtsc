@@ -21,6 +21,7 @@
     <string name="txtMailByClient">Посылать почту, используя Android-клиента</string>
     <string name="txtMailByGmail">Посылать почту, используя учетную запись Gmail</string>
 
+    <string name="txtReport">Отчет</string>
     <string name="txtReportNow">Отчет за сегодня</string>
     <string name="txtReportDate">Отчет за выбранную дату</string>
     <string name="txtReportAll">Отчет за весь период</string>
@@ -32,5 +33,9 @@
     <string name="txtUser">Имя</string>
     <string name="txtPassword">Пароль</string>
     <string name="txtDate">Дата</string>
+
+    <string name="txtClear">Очистить</string>
+    <string name="txtSave">Сохранить</string>
+
 
 </resources>

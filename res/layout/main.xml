@@ -21,9 +21,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/txtAppList"
-                android:background="@drawable/button_shape" android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_marginLeft="5dp" android:layout_marginRight="5dp">
+                android:background="@drawable/button_shape"
+                android:padding="10dp"
+                android:layout_marginTop="1dp" android:layout_marginBottom="1dp" android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
             </Button>
         </TableRow>
         <TableRow
@@ -36,9 +37,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/txtConfiguration"
-                android:background="@drawable/button_shape" android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_marginLeft="5dp" android:layout_marginRight="5dp">
+                android:background="@drawable/button_shape"
+                android:padding="10dp"
+                android:layout_marginTop="1dp" android:layout_marginBottom="1dp" android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
             </Button>
         </TableRow>
         <TableRow
@@ -51,9 +53,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/txtGenerateReport"
-                android:background="@drawable/button_shape" android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_marginLeft="5dp" android:layout_marginRight="5dp">
+                android:background="@drawable/button_shape"
+                android:padding="10dp"
+                android:layout_marginTop="1dp" android:layout_marginBottom="1dp" android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
             </Button>
         </TableRow>
         <TableRow
@@ -66,9 +69,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/txtServiceStart"
-                android:background="@drawable/button_shape" android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_marginLeft="5dp" android:layout_marginRight="5dp">
+                android:background="@drawable/button_shape"
+                android:padding="10dp"
+                android:layout_marginTop="1dp" android:layout_marginBottom="1dp" android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
             </Button>
         </TableRow>
         <TableRow
@@ -83,9 +87,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/txtStatFromService"
                 android:background="@drawable/button_shape"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp" android:paddingTop="10dp" android:paddingBottom="10dp"
-                >
+                android:padding="10dp" android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp" android:layout_marginLeft="5dp" android:layout_marginRight="5dp">
             </Button>
         </TableRow>
     </TableLayout>

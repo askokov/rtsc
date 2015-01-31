@@ -14,7 +14,7 @@
 
     <TableLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:shrinkColumns="1,2" android:stretchColumns="0"
+        android:layout_height="wrap_content" android:stretchColumns="0"
         >
         <TableRow
             android:layout_width="fill_parent"
@@ -22,37 +22,36 @@
 
             <ImageView android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:background="@drawable/transparent24" android:layout_span="4"/>
+                       android:background="@drawable/transparent24" android:layout_span="3"/>
         </TableRow>
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:singleLine="false" android:paddingLeft="10dp" android:paddingRight="10dp"
-                android:gravity="center">
-            </TextView>
-            <Button
-                android:id="@+id/btnClear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/delete_enabled" android:layout_gravity="center_horizontal">
-            </Button>
 
             <ImageView android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:background="@drawable/transparent24"/>
 
             <Button
-                android:id="@+id/btnSave"
-                android:layout_width="wrap_content"
+                android:id="@+id/btnClear"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/save_enabled" android:layout_gravity="center_horizontal">
+                android:layout_gravity="center_vertical"
+                android:text="@string/txtClear"
+                android:background="@drawable/button_shape"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" android:padding="10dp">
+            </Button>
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/txtSave"
+                android:background="@drawable/button_shape"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" android:padding="10dp">
             </Button>
         </TableRow>
     </TableLayout>
