@@ -105,7 +105,9 @@
                 android:layout_height="wrap_content"
                 android:inputType="date"
                 android:ems="10"
-                android:editable="true" android:id="@+id/editDate" android:layout_marginLeft="20dp"
+                android:editable="true"
+                android:id="@+id/editDate"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"/>
         </TableRow>
 

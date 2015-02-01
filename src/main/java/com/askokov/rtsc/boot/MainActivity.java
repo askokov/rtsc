@@ -48,9 +48,12 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
             serviceRunning = true;
             btnService.setText(R.string.txtServiceStop);
 
-            logger.info("onCreate: service running");
+            logger.info("onCreate: service is running...");
         } else {
+            btnAppList.setText(R.string.txtAppList_disabled);
             btnAppList.setEnabled(false);
+
+            logger.info("onCreate: service is stopped");
         }
 
         //SharedPreferences pref = getPreferences(MODE_PRIVATE);
@@ -73,12 +76,12 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                 logger.info("onClick: btnAppList");
 
                 if (serviceRunning) {
-                    logger.info("onClick: service running...");
+                    logger.info("onClick: service is running...");
 
                     Intent intent = new Intent(this, AppsActivity.class);
                     startActivityForResult(intent, GET_APP_LIST_FROM_SYSTEM);
                 } else {
-                    logger.info("onClick: service stopped...");
+                    logger.info("onClick: service is stopped");
                 }
 
                 break;
@@ -106,6 +109,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                     stopService(serviceIntent);
 
                     serviceRunning = false;
+                    btnAppList.setText(R.string.txtAppList_disabled);
                     btnAppList.setEnabled(false);
 
                     btnService.setText(R.string.txtServiceStart);
@@ -116,6 +120,7 @@ public class MainActivity extends Activity implements Constant, View.OnClickList
                     startService(serviceIntent);
 
                     serviceRunning = true;
+                    btnAppList.setText(R.string.txtAppList);
                     btnAppList.setEnabled(true);
 
                     btnService.setText(R.string.txtServiceStop);

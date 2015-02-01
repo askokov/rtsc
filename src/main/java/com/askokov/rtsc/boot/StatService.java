@@ -60,7 +60,9 @@ public class StatService extends Service implements Constant {
 
         File path = new File(Environment.getExternalStorageDirectory(), getPackageName());
         if (!path.exists()) {
-            path.mkdir();
+            if (path.mkdir()) {
+                logger.info("Directory<" + path.getPath() + "> is created");
+            }
         }
 
         String dbPath = path.getPath() + DB_NAME;
@@ -71,6 +73,7 @@ public class StatService extends Service implements Constant {
         //dbHelper.createDataBase();
 
         List<PInfo> list = dbHelper.loadApps(Func.truncateDate(new Date()));
+        Func.printInfo(list);
         statHandler = new StatHandler(list);
 
         configuration = dbHelper.loadConfiguration();

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="application_name">Сборщик статистики о работающих приложениях</string>
+    <string name="application_name">Статистика работающих приложений</string>
     <string name="apps_name">Редактирование списка приложений</string>
     <string name="config_name">Настройка</string>
     <string name="report_name">Отчет</string>
     <string name="crash_report">Отчет о проблеме</string>
 
     <string name="txtAppList">Список приложений</string>
+    <string name="txtAppList_disabled">Список приложений (недоступно, запустите сервис)</string>
+
     <string name="txtConfiguration">Настройки</string>
     <string name="txtGenerateReport">Создать отчет</string>
     <string name="txtServiceStart">Запуск сервиса</string>

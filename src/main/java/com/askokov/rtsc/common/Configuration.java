@@ -48,4 +48,9 @@ public class Configuration implements Serializable {
     public void setMailUser(final String mailUser) {
         this.mailUser = mailUser;
     }
+
+    @Override
+    public String toString() {
+        return "Configuration[addInstalled<" + addInstalled + ">; reportType<" + reportType.name() + ">, mailType<" + mailType.name() + ">, mailUser<" + mailUser +  ">, mailPassword<" + mailPassword + ">]";
+    }
 }

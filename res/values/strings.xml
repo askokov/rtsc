@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="application_name">Running task statistic collector</string>
+    <string name="application_name">Running task statistic</string>
     <string name="apps_name">Edit task list</string>
     <string name="config_name">Configuration</string>
     <string name="report_name">Report</string>
     <string name="crash_report">Отчет о проблеме</string>
 
     <string name="txtAppList">Applications list</string>
+    <string name="txtAppList_disabled">Applications list (disabled, start service)</string>
+
     <string name="txtConfiguration">Configuration</string>
     <string name="txtGenerateReport">Generate report</string>
     <string name="txtServiceStart">Start service</string>
@@ -15,7 +17,6 @@
 
     <string name="txtStatFromService">Statistic from service</string>
     <string name="txtConfig">Configuration</string>
-
 
     <string name="txtMailByClient">Send e-mail by Android client</string>
     <string name="txtMailByGmail">Send e-mail by Gmail account</string>

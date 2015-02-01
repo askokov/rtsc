@@ -81,16 +81,19 @@ public class ConfigActivity extends Activity implements Constant, View.OnClickLi
     @Override
     public void onCheckedChanged(final RadioGroup group, final int checkedId) {
         // checkedId is the RadioButton selected
-        RadioButton rb = (RadioButton) findViewById(checkedId);
-        if (rb.getId() == R.id.radioMailGmail) {
-            editUser.setEnabled(true);
-            editPassword.setEnabled(true);
-        } else {
-            editUser.setEnabled(false);
-            editPassword.setEnabled(false);
-        }
+        logger.info(String.format("onCheckedChanged: group<%08x>, checkedId<%08x>", group.getId(), checkedId));
 
-        logger.info("onCheckedChanged: Select radio<" + rb.getId() + ", " + rb.getText() + ">");
+        if (checkedId > 0) {
+            RadioButton rb = (RadioButton) findViewById(checkedId);
+            if (rb.getId() == R.id.radioMailGmail) {
+                editUser.setEnabled(true);
+                editPassword.setEnabled(true);
+            } else {
+                editUser.setEnabled(false);
+                editPassword.setEnabled(false);
+            }
+            logger.info("onCheckedChanged: Select radio<" + rb.getText() + ">");
+        }
     }
 
     @Override
@@ -122,10 +125,18 @@ public class ConfigActivity extends Activity implements Constant, View.OnClickLi
 
             if (resultCode == GET_CONFIGURATION) {
                 Configuration configuration = (Configuration)resultData.getSerializable(RESULT);
+                logger.info("GetConfigurationResultReceiver: " + configuration);
 
                 cbAddInstalled.setChecked(configuration.isAddInstalled());
 
-                groupMail.check(configuration.getMailType().ordinal());
+                switch (configuration.getMailType()) {
+                    case CLIENT:
+                        groupMail.check(R.id.radioMailAndroid);
+                        break;
+                    case GMAIL:
+                        groupMail.check(R.id.radioMailGmail);
+                        break;
+                }
 
                 editUser.setText(configuration.getMailUser());
                 editPassword.setText(configuration.getMailPassword());

@@ -3,11 +3,10 @@ package com.askokov.rtsc.common;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -15,10 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.ContactsContract;
-import android.telephony.PhoneNumberUtils;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
@@ -51,94 +47,6 @@ public class Func {
                 logger.info(where + "Func: pkgName=" + pkgName);
             }
         }
-    }
-
-    public static Map<String, String> getContactByPhone(Context context, String sourcePhoneNumber) {
-        logger.info("Func: retrieve data for number<" + sourcePhoneNumber + ">");
-
-        Map<String, String> map = new HashMap<String, String>();
-
-        String phoneNumber = PhoneNumberUtils.stripSeparators(sourcePhoneNumber);
-
-        String[] projection = new String[]{ContactsContract.Data.CONTACT_ID, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.Contacts.DISPLAY_NAME};
-
-        String selection = "PHONE_NUMBERS_EQUAL(" + ContactsContract.CommonDataKinds.Phone.NUMBER + ",?) AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "'";
-        String[] selectionArgs = new String[]{phoneNumber};
-
-        Cursor cursor = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI, projection, selection, selectionArgs, null);
-
-        /*
-        String[] projection = new String[] {
-                        ContactsContract.Contacts._ID,
-                        ContactsContract.Data.DISPLAY_NAME,
-                        ContactsContract.CommonDataKinds.Email.DATA,
-                        ContactsContract.CommonDataKinds.Phone.DATA, }
-
-        Cursor cursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-                        projection, null, null, order);
-                int idColumn = cursor.getColumnIndex(ContactsContract.Data._ID);
-                int nameColumn = cursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME);
-                int emailColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
-                int phoneColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA);
-
-
-
-        Cursor data = context.getContentResolver().query(
-        Data.CONTENT_URI, new String[] { Data._ID,Data.MIMETYPE,
-        Email.ADDRESS, Photo.PHOTO},Data.CONTACT_ID
-        + "=?" + " AND " + "(" +  Data.MIMETYPE + "='"
-        + Photo.CONTENT_ITEM_TYPE + "' OR " + Data.MIMETYPE
-        + "='" + Email.CONTENT_ITEM_TYPE +"')",
-        new String[] {String.valueOf(contactId)}, null);
-
-
-
-        private String getContactNameFromNumber(String number) {
-                Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,
-                        Uri.encode(number));
-
-                Cursor cursor = context.getContentResolver().query(uri,
-                        new String[] { PhoneLookup.DISPLAY_NAME }, null, null, null);
-                if (cursor.moveToFirst()) {
-                    name = cursor.getString(cursor
-                            .getColumnIndex(PhoneLookup.DISPLAY_NAME));
-                }
-
-                return name;
-                // proceed as you need
-
-            }
-         */
-
-        if (cursor != null) {
-            if (cursor.getCount() > 0) {
-                if (cursor.moveToFirst()) {
-                    for (int i = 0; i < cursor.getColumnCount(); i++) {
-                        //map.put(cursor.getColumnName(i), cursor.getString(i));
-
-                        String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.CONTACT_ID));
-                        String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        String displayName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-                        map.put("id", id);
-                        map.put("number", number);
-                        map.put("displayName", displayName);
-                    }
-                }
-
-                /*
-                while (cursor.moveToNext()) {
-                }
-                */
-            } else {
-                logger.info("Func: cursor is EMPTY for number<" + sourcePhoneNumber + ">");
-            }
-            cursor.close();
-        } else {
-            logger.info("Func: cursor is NULL for number<" + sourcePhoneNumber + ">");
-        }
-
-        return map;
     }
 
     private static List<PInfo> getInstalledApps(Context context, boolean getSysPackages) {
@@ -185,7 +93,7 @@ public class Func {
         }
     }
 
-    public static boolean saveConfiguration(SharedPreferences pref, Configuration configuration) {
+    public static boolean savePreferences(SharedPreferences pref, Configuration configuration) {
         logger.info("Save configuration");
 
         SharedPreferences.Editor ed = pref.edit();
@@ -195,7 +103,7 @@ public class Func {
         return ed.commit();
     }
 
-    public static Configuration loadConfiguration(SharedPreferences pref) {
+    public static Configuration loadPreferences(SharedPreferences pref) {
         logger.info("Load configuration");
 
         Configuration configuration = new Configuration();
@@ -206,13 +114,14 @@ public class Func {
         return configuration;
     }
 
-    public static List<PInfo> merge(StatHandler handler, List<PInfo> input, boolean selected) {
-        Set<PInfo> mergedSet = new TreeSet<PInfo>();
+    public static List<PInfo> merge(StatHandler handler, List<PInfo> input, boolean saveList) {
+        Set<PInfo> mergedSet = new TreeSet<PInfo>(new PInfoComparator());
         Set<PInfo> memorySet = new HashSet<PInfo>(handler.getApps());
         Set<PInfo> inputSet = new HashSet<PInfo>(input);
 
         if (memorySet.isEmpty()) {
             mergedSet.addAll(input);
+            initInfo(mergedSet);
         } else {
 
             for (PInfo mem : memorySet) {
@@ -229,14 +138,14 @@ public class Func {
                     in.setStartTime(System.currentTimeMillis());
                     mergedSet.add(in);
 
-                    if (selected) {
+                    if (saveList) {
                         handler.setFlush(true);
                     }
                 }
             }
-        }
 
-        initInfo(mergedSet);
+            initInfo(mergedSet);
+        }
 
         return new ArrayList<PInfo>(mergedSet);
     }
@@ -246,7 +155,6 @@ public class Func {
         Date date = Func.truncateDate(new Date());
 
         for (PInfo info : infos) {
-            info.setChecked(true);
             info.setDate(date);
         }
     }
@@ -273,5 +181,17 @@ public class Func {
         return result;
     }
 
+    public static void printInfo(Collection<PInfo> infos) {
+        for (PInfo info : infos) {
+            logger.info(info.prettyPrint());
+        }
+    }
 
+    public static class PInfoComparator implements Comparator<PInfo> {
+
+        @Override
+        public int compare(final PInfo lhs, final PInfo rhs) {
+            return lhs.getPackageName().compareTo(rhs.getPackageName());
+        }
+    }
 }

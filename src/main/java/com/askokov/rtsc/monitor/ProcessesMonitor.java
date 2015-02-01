@@ -26,7 +26,7 @@ public class ProcessesMonitor {
 
             scanRunningApps(am, handler);
         } else {
-            logger.info("ProcessesMonitor: Observed applications are not set");
+            logger.info("Observed applications are not set");
         }
     }
 
@@ -38,7 +38,7 @@ public class ProcessesMonitor {
 
             if (observed != null) {
                 //обновить время работы приложения
-                logger.info("ProcessesMonitor: correct time for <" + observed.getPackageName() + ">");
+                logger.info("Correct time for <" + observed.getPackageName() + ">");
                 Func.saveTime(observed);
             }
         }
@@ -48,9 +48,13 @@ public class ProcessesMonitor {
         PInfo result = null;
 
         for (PInfo info : list) {
-            if (info.isChecked() && info.getPackageName().equals(pname)) {
-                result = info;
-                break;
+            if (info.isChecked()) {
+                if (info.getPackageName().equals(pname)) {
+                    result = info;
+                    break;
+                }
+            } else {
+                logger.info("Not monitoring: <" + info.getPackageName() + ">");
             }
         }
 
@@ -58,7 +62,7 @@ public class ProcessesMonitor {
     }
 
     private void flushApps(StatHandler handler, DBHelper dbHelper) {
-        logger.info("ProcessesMonitor: flush applications");
+        logger.info("Flush applications");
 
         dbHelper.saveApps(handler.getApps());
 

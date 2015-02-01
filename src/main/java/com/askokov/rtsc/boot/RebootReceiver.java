@@ -22,6 +22,8 @@ public class RebootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        logger.info("RebootReceiver.onReceive");
+
         Func.printIntent("RebootReceiver.onReceive", intent);
 
         if (Intent.ACTION_REBOOT.equals(intent.getAction())) {

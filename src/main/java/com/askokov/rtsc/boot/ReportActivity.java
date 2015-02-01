@@ -34,10 +34,7 @@ public class ReportActivity extends Activity implements Constant, View.OnClickLi
         super.onCreate(savedInstanceState);
         logger.info("onCreate");
 
-        setContentView(R.layout.config);
-
-        Intent intent = getIntent();
-        configuration = (Configuration) intent.getSerializableExtra(CONFIGURATION);
+        setContentView(R.layout.report);
 
         groupReport = (RadioGroup) findViewById(R.id.groupReport);
         groupReport.setOnCheckedChangeListener(this);
@@ -98,10 +95,14 @@ public class ReportActivity extends Activity implements Constant, View.OnClickLi
     @Override
     public void onCheckedChanged(final RadioGroup group, final int checkedId) {
         // checkedId is the RadioButton selected
-        RadioButton rb = (RadioButton) findViewById(checkedId);
-        editDate.setEnabled(rb.getId() == R.id.radioReportDate);
+        logger.info(String.format("onCheckedChanged: group<%08x>, checkedId<%08x>", group.getId(), checkedId));
 
-        logger.info("onCheckedChanged: Select radio<" + rb.getId() + ", " + rb.getText() + ">");
+        if (checkedId > 0) {
+            RadioButton rb = (RadioButton) findViewById(checkedId);
+            editDate.setEnabled(rb.getId() == R.id.radioReportDate);
+
+            logger.info("onCheckedChanged: Select radio<" + rb.getText() + ">");
+        }
     }
 
     @Override
@@ -168,9 +169,22 @@ public class ReportActivity extends Activity implements Constant, View.OnClickLi
             logger.info("GetConfigurationResultReceiver.onReceiveResult: resultCode<" + resultCode + ">");
 
             if (resultCode == GET_CONFIGURATION) {
-                Configuration configuration = (Configuration)resultData.getSerializable(RESULT);
+                configuration = (Configuration)resultData.getSerializable(RESULT);
+                logger.info("GetConfigurationResultReceiver: " + configuration);
 
-                groupReport.check(configuration.getReportType().ordinal());
+                switch (configuration.getReportType()) {
+                    case ALL:
+                        groupReport.check(R.id.radioReportAll);
+                        break;
+
+                    case NOW:
+                        groupReport.check(R.id.radioReportNow);
+                        break;
+
+                    case DATE:
+                        groupReport.check(R.id.radioReportDate);
+                        break;
+                }
             }
         }
     }

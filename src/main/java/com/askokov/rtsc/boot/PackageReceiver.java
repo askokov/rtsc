@@ -31,7 +31,8 @@ public class PackageReceiver extends BroadcastReceiver {
 
         if (Intent.ACTION_PACKAGE_ADDED.equals(intent.getAction())) {
             if (configuration.isAddInstalled()) {
-                Set<PInfo> sorted = new TreeSet<PInfo>(statHandler.getApps());
+                Set<PInfo> sorted = new TreeSet<PInfo>(new Func.PInfoComparator());
+                sorted.addAll(statHandler.getApps());
                 /*
                 Создать PInfo для установленного приложения и добавить его в список
                 sorted.add();

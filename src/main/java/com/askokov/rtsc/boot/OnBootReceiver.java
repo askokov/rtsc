@@ -15,6 +15,7 @@ public class OnBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         LogConfigurator.configure(context);
+        logger.info("OnBootReceiver.onReceive");
         Func.printIntent("OnBootReceiver.onReceive", intent);
 
         //Start Service On Boot Start Up
